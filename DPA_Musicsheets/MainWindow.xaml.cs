@@ -83,6 +83,7 @@ namespace DPA_Musicsheets
                 new Note("G", 0, 4, MusicalSymbolDuration.Half, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single })
                 { IsChordElement = true });
             staff.AddMusicalSymbol(new Barline());
+            
         }
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)

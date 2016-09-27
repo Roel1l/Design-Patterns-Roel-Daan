@@ -62,13 +62,7 @@ namespace DPA_Musicsheets
                         {
                             byte[] bytes = metaMessage.GetBytes();
                             timeSignature[0] = bytes[0];    //kwart = 1 / 0.25 = 4                   
-                            timeSignature[1] = (int)(1 / Math.Pow(bytes[1], -2));
-                        }
-                        if(metaMessage.MetaType == MetaType.EndOfTrack)
-                        {
-                            
-                            string asdf = MidiReader.GetMetaString(metaMessage);
-                            //Vraag leraar: endoftrack zou volgens bb absoluteticks moeten hebben maar dat is niet zo
+                            timeSignature[1] = (int)Math.Pow(2, bytes[1]);
                         }
                     }
                 }
