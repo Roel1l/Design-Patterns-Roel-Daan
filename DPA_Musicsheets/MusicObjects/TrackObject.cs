@@ -32,7 +32,7 @@ namespace DPA_Musicsheets.MusicObjects
             //rust bereken: vorige noot had message.data2 == 0 en huidige noot absoluteticks is later dan vorige noot
 
             //case: Rust
-            if (lastNoteData2 == 0)
+            if (lastNoteData2 == 0 && message.Data2 == 0)
             {           
                 if (midiEvent.AbsoluteTicks > notes[notes.Count - 1].absoluteTicks)
                 {
@@ -76,7 +76,7 @@ namespace DPA_Musicsheets.MusicObjects
                     if (percentageOfWholeNote == 1.5 * absoluteNoteLength)
                     {
                         notes[notes.Count - 1].lengte = noteLength / 3 * 2;
-                        notes[notes.Count - 1].punt = true;
+                        notes[notes.Count - 1].punt = 1;
                     }     
                 }
             }
@@ -84,12 +84,5 @@ namespace DPA_Musicsheets.MusicObjects
            
         }
       
-        public void setNoteDuur()
-        {
-            for (int i = 0; i < notes.Count - 1; i++)
-            {
-                notes[i].nootduur = ((double)notes[i + 1].absoluteTicks - (double)notes[i].absoluteTicks) / (double)ticksPerBeat;
-            }
-        }
     }
 }

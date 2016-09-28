@@ -10,7 +10,7 @@ namespace DPA_Musicsheets
 {
     class MidiToObject
     {
-        TrackObjectBuilder trackBuilder = new TrackObjectBuilder();
+        private TrackObjectBuilder trackBuilder = new TrackObjectBuilder();
 
         public MidiToObject(String path)
         {
@@ -29,7 +29,8 @@ namespace DPA_Musicsheets
             string tempo = "Error";
             List<Tuple<ChannelMessage, MidiEvent>> notes = new List<Tuple<ChannelMessage, MidiEvent>>();
             int ticksPerBeat = sequence.Division;
-
+            //int ticksPerBeat = (int)(sequence.Division * (noteLength / 0.25));
+            //wat is notelength hier? moet je de ticksperbeat per noot uitrekenen?
 
             foreach (Track i in tracks)
             {
@@ -70,6 +71,11 @@ namespace DPA_Musicsheets
             }
 
             trackBuilder.buildMidiToObjectTrack(trackName, timeSignature, tempo, ticksPerBeat, notes);
+        }
+
+        public TrackObject getTrackObject()
+        {
+            return trackBuilder.tracks[0];
         }
     }
 }
