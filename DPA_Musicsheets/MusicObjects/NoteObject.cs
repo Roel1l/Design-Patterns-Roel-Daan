@@ -8,10 +8,8 @@ namespace DPA_Musicsheets
 {
     class NoteObject
     {
-        public enum KruisMol { None, Kruis, Mol };
-
         private List<string> toonHoogtes;
-        public KruisMol kruisMol { get; set; }
+        public int kruisMol { get; set; } // '1' is kruis, '-1' is mol
 
         public int octaaf { get; set; }
 
@@ -21,7 +19,7 @@ namespace DPA_Musicsheets
 
         public bool rust { get; set; }
 
-        public bool punt { get; set; }
+        public int punt { get; set; }
 
         public string toonHoogte { get; set; }
 
@@ -49,7 +47,7 @@ namespace DPA_Musicsheets
         public void setToonhoogte(int keyCode)
         {
             this.toonHoogte = toonHoogtes[keyCode];
-            if (this.toonHoogte.Contains("#")) this.kruisMol = KruisMol.Kruis;
+            if (this.toonHoogte.Contains("#")) this.kruisMol = 1;
         }
 
     }

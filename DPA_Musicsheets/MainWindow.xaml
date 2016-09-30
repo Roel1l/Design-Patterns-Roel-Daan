@@ -37,7 +37,7 @@
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
-        <PSAMWPFControl:IncipitViewerWPF HorizontalAlignment="Left" Margin="0,300,0,0" Width="525" x:Name="staff" >
+        <PSAMWPFControl:IncipitViewerWPF HorizontalAlignment="Left" Margin="0,324,-728,25" Width="1245" x:Name="staff" >
         </PSAMWPFControl:IncipitViewerWPF>
     </Grid>
 </Window>

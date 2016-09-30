@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using DPA_Musicsheets.MusicObjects;
+using Microsoft.Win32;
 using PSAMControlLibrary;
 using Sanford.Multimedia.Midi;
 using System;
@@ -83,6 +84,7 @@ namespace DPA_Musicsheets
                 new Note("G", 0, 4, MusicalSymbolDuration.Half, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single })
                 { IsChordElement = true });
             staff.AddMusicalSymbol(new Barline());
+
         }
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
@@ -103,8 +105,54 @@ namespace DPA_Musicsheets
             {
                 txt_MidiFilePath.Text = openFileDialog.FileName;
             }
+
+            
         }
+
+        private void drawTrack(TrackObject track)
+        {
+            staff.ClearMusicalIncipit();
+            staff.AddMusicalSymbol(new Clef(ClefType.GClef, -2));
+            staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, (uint)track.timeSignature[0], (uint)track.timeSignature[1]));
+
+            double maatvol = 0;
+
+            foreach (NoteObject n in track.notes)
+            {
+                if(maatvol >= track.timeSignature[1])
+                {
+                    staff.AddMusicalSymbol(new Barline());
+                    maatvol = 0;           
+                }
+                Console.WriteLine(maatvol);
+                maatvol += n.nootduur;
+                if(!n.rust) staff.AddMusicalSymbol(new Note(n.toonHoogte, n.kruisMol, n.octaaf, noteLengthToMusicalSymbolDuration((int)n.lengte), NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single}) { NumberOfDots = n.punt});
+                else staff.AddMusicalSymbol(new Rest(noteLengthToMusicalSymbolDuration((int)n.lengte)));
+            }
+        }
+
         
+
+        public MusicalSymbolDuration noteLengthToMusicalSymbolDuration(int length)
+        {
+            switch (length)
+            {
+                case 1:
+                    return MusicalSymbolDuration.Whole;
+                case 2:
+                    return MusicalSymbolDuration.Half;
+                case 4:
+                    return MusicalSymbolDuration.Quarter;
+                case 8:
+                    return MusicalSymbolDuration.Eighth;
+                case 16:
+                    return MusicalSymbolDuration.Sixteenth;
+                default:
+                    return MusicalSymbolDuration.Unknown;
+            }
+        }
+
+
         private void btn_Stop_Click(object sender, RoutedEventArgs e)
         {
             if (_player != null)
@@ -114,17 +162,19 @@ namespace DPA_Musicsheets
         private void btn_ShowContent_Click(object sender, RoutedEventArgs e)
         {
             string extension = txt_MidiFilePath.Text.Split('.').Last();
-        
 
             if (extension == "mid")
             {
                 ShowMidiTracks(MidiReader.ReadMidi(txt_MidiFilePath.Text));
                 MidiToObject midiToObject = new MidiToObject(txt_MidiFilePath.Text);
+                drawTrack(midiToObject.getTrackObject());
             }
             else if(extension == "ly")
             {
                 LyToObject lyToObject = new LyToObject(txt_MidiFilePath.Text);
             }
+
+           
         }
 
         private void ShowMidiTracks(IEnumerable<MidiTrack> midiTracks)
