@@ -25,41 +25,25 @@ namespace DPA_Musicsheets.MusicObjects
         }
 
         private int lastNoteData2 = 1;
+        private int lastNoteAbsoluteTicks = 0;
 
         public void addNote(ChannelMessage message, MidiEvent midiEvent)
         {
+            NoteObject note = new NoteObject();
             
-            //rust bereken: vorige noot had message.data2 == 0 en huidige noot absoluteticks is later dan vorige noot
-
-            //case: Rust
-            if (lastNoteData2 == 0 && message.Data2 == 0)
-            {           
-                if (midiEvent.AbsoluteTicks > notes[notes.Count - 1].absoluteTicks)
-                {
-                    NoteObject note = new NoteObject();
-                    note.absoluteTicks = midiEvent.AbsoluteTicks;
-                    note.octaaf = message.Data1 / 12;
-                    note.setToonhoogte(message.Data1 % 12);
-                    note.rust = true;
-                    notes.Add(note);
-                    lastNoteData2 = message.Data2;
-                    return;
-                }
-            }
-
-            lastNoteData2 = message.Data2;
-
-            //case: normale Noot
             if (message.Data2 == 90)
             {
-                NoteObject note = new NoteObject();
                 note.absoluteTicks = midiEvent.AbsoluteTicks;
                 note.octaaf = message.Data1 / 12;
                 note.setToonhoogte(message.Data1 % 12);
                 notes.Add(note);
             }
-            else
-            //case toonhoogte van vorige noot zetten
+            if (message.Data2 == 90 && midiEvent.DeltaTicks > 0) //Rust
+            {
+                notes[notes.Count - 1].rust = true;  
+            }
+            
+            if(message.Data2 == 0)
             {
                 notes[notes.Count - 1].nootduur = ((double)midiEvent.AbsoluteTicks - (double)notes[notes.Count - 1].absoluteTicks) / (double)ticksPerBeat;
                 double percentageOfWholeNote = (1.0 / (double)timeSignature[1]) * notes[notes.Count - 1].nootduur;
@@ -80,8 +64,6 @@ namespace DPA_Musicsheets.MusicObjects
                     }     
                 }
             }
-
-           
         }
       
     }

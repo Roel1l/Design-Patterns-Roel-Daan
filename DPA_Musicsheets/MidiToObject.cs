@@ -28,9 +28,8 @@ namespace DPA_Musicsheets
             int[] timeSignature = new int[2];
             string tempo = "Error";
             List<Tuple<ChannelMessage, MidiEvent>> notes = new List<Tuple<ChannelMessage, MidiEvent>>();
+            double noteLength;
             int ticksPerBeat = sequence.Division;
-            //int ticksPerBeat = (int)(sequence.Division * (noteLength / 0.25));
-            //wat is notelength hier? moet je de ticksperbeat per noot uitrekenen?
 
             foreach (Track i in tracks)
             {
@@ -62,13 +61,16 @@ namespace DPA_Musicsheets
                         if (metaMessage.MetaType == MetaType.TimeSignature)
                         {
                             byte[] bytes = metaMessage.GetBytes();
-                            timeSignature[0] = bytes[0];    //kwart = 1 / 0.25 = 4                   
+                            timeSignature[0] = bytes[0];                  
                             timeSignature[1] = (int)Math.Pow(2, bytes[1]);
+                            noteLength = 1.0/ timeSignature[1];
+                            ticksPerBeat = (int)(sequence.Division * (noteLength / 0.25));
                         }
                     }
                 }
                 #endregion
             }
+
 
             trackBuilder.buildMidiToObjectTrack(trackName, timeSignature, tempo, ticksPerBeat, notes);
         }
