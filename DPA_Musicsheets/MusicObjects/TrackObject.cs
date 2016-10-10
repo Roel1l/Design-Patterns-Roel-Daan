@@ -17,11 +17,11 @@ namespace DPA_Musicsheets.MusicObjects
         public int tempo { get; set; }
 
         public int ticksPerBeat { get; set; }
-        public List<NoteObject> notes { get; set; }
+        public List<Symbol> notes { get; set; }
 
         public TrackObject()
         {
-            notes = new List<NoteObject>();
+            notes = new List<Symbol>();
         }
 
         private int lastNoteData2 = 1;
@@ -29,21 +29,28 @@ namespace DPA_Musicsheets.MusicObjects
 
         public void addNote(ChannelMessage message, MidiEvent midiEvent)
         {
-            NoteObject note = new NoteObject();
-            
-            if (message.Data2 == 90)
+            Symbol note;
+
+
+            if (message.Data2 == 90 && midiEvent.DeltaTicks > 0) //Rust
             {
+                note = new RestObject();
                 note.absoluteTicks = midiEvent.AbsoluteTicks;
                 note.octaaf = message.Data1 / 12;
                 note.setToonhoogte(message.Data1 % 12);
                 notes.Add(note);
             }
-            if (message.Data2 == 90 && midiEvent.DeltaTicks > 0) //Rust
+            else if (message.Data2 == 90)
             {
-                notes[notes.Count - 1].rust = true;  
+                note = new NoteObject();
+                note.absoluteTicks = midiEvent.AbsoluteTicks;
+                note.octaaf = message.Data1 / 12;
+                note.setToonhoogte(message.Data1 % 12);
+                notes.Add(note);
             }
             
-            if(message.Data2 == 0)
+
+            if (message.Data2 == 0)
             {
                 notes[notes.Count - 1].nootduur = ((double)midiEvent.AbsoluteTicks - (double)notes[notes.Count - 1].absoluteTicks) / (double)ticksPerBeat;
                 double percentageOfWholeNote = (1.0 / (double)timeSignature[1]) * notes[notes.Count - 1].nootduur;

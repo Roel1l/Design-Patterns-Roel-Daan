@@ -116,8 +116,8 @@ namespace DPA_Musicsheets
             staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, (uint)track.timeSignature[0], (uint)track.timeSignature[1]));
 
             double maatvol = 0;
-
-            foreach (NoteObject n in track.notes)
+  
+            foreach (Symbol symbol in track.notes)
             {
                 if(maatvol >= track.timeSignature[1])
                 {
@@ -125,9 +125,8 @@ namespace DPA_Musicsheets
                     maatvol = 0;           
                 }
                 Console.WriteLine(maatvol);
-                maatvol += n.nootduur;
-                if (!n.rust) staff.AddMusicalSymbol(new Note(n.toonHoogte, n.kruisMol, n.octaaf - 1, noteLengthToMusicalSymbolDuration((int)n.lengte), NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single }) { NumberOfDots = n.punt });
-                else staff.AddMusicalSymbol(new Rest(noteLengthToMusicalSymbolDuration((int)n.lengte)));
+                maatvol += symbol.nootduur;
+                staff.AddMusicalSymbol(symbol.getType());
             }
         }
 

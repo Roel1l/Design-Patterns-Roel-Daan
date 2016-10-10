@@ -111,7 +111,7 @@ namespace DPA_Musicsheets
             NoteObject maatStreep = new NoteObject();
 
             // maatstrepen zijn saai en hebben maar 1 veld dat ze belangrijk maakt
-            maatStreep.isMaatStreep = true;
+           // maatStreep.isMaatStreep = true;
 
             return maatStreep;
         }
