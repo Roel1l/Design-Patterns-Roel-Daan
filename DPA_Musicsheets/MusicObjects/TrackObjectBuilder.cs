@@ -11,12 +11,10 @@ namespace DPA_Musicsheets.MusicObjects
     {
         public List<TrackObject> tracks = new List<TrackObject>();
 
-        public void buildMidiToObjectTrack(string trackName, int[] timeSignature, string tempo, int ticksperBeat, List<Tuple<ChannelMessage, MidiEvent>> notes)
+        public void buildMidiToObjectTrack(List<int[]> timeSignature, List<int> ticksperBeat, List<Tuple<ChannelMessage, MidiEvent>> notes)
         {
             TrackObject track = new TrackObject();
-            track.trackName = trackName;
             track.timeSignature = timeSignature;
-            track.tempo = Int32.Parse(tempo.Substring(7));
             track.ticksPerBeat = ticksperBeat;
 
             foreach (Tuple<ChannelMessage, MidiEvent> c in notes)

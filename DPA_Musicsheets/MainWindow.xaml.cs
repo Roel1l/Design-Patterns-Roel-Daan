@@ -113,17 +113,18 @@ namespace DPA_Musicsheets
         {
             staff.ClearMusicalIncipit();
             staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
-            staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, (uint)track.timeSignature[0], (uint)track.timeSignature[1]));
+            staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, (uint)track.timeSignature[0][0], (uint)track.timeSignature[0][1]));
 
             double maatvol = 0;
   
             foreach (Symbol symbol in track.notes)
             {
-                if(maatvol >= track.timeSignature[1])
+                if(maatvol >= track.timeSignature[0][1])
                 {
                     staff.AddMusicalSymbol(new Barline());
                     maatvol = 0;           
                 }
+                
                 Console.WriteLine(maatvol);
                 maatvol += symbol.nootduur;
                 staff.AddMusicalSymbol(symbol.getType());
