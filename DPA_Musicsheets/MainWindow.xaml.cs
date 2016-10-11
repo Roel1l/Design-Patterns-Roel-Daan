@@ -112,22 +112,22 @@ namespace DPA_Musicsheets
         private void drawTrack(TrackObject track)
         {
             staff.ClearMusicalIncipit();
-            staff.AddMusicalSymbol(new Clef(ClefType.GClef, -2));
-            staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, (uint)track.timeSignature[0], (uint)track.timeSignature[1]));
+            staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
+            staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, (uint)track.timeSignature[0][0], (uint)track.timeSignature[0][1]));
 
             double maatvol = 0;
-
-            foreach (NoteObject n in track.notes)
+  
+            foreach (Symbol symbol in track.notes)
             {
-                if(maatvol >= track.timeSignature[1])
+                if(maatvol >= track.timeSignature[0][1])
                 {
                     staff.AddMusicalSymbol(new Barline());
                     maatvol = 0;           
                 }
+                
                 Console.WriteLine(maatvol);
-                maatvol += n.nootduur;
-                if(!n.rust) staff.AddMusicalSymbol(new Note(n.toonHoogte, n.kruisMol, n.octaaf, noteLengthToMusicalSymbolDuration((int)n.lengte), NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single}) { NumberOfDots = n.punt});
-                else staff.AddMusicalSymbol(new Rest(noteLengthToMusicalSymbolDuration((int)n.lengte)));
+                maatvol += symbol.nootduur;
+                staff.AddMusicalSymbol(symbol.getType());
             }
         }
 

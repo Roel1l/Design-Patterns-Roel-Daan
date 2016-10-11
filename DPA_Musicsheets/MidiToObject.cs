@@ -24,13 +24,10 @@ namespace DPA_Musicsheets
                 tracks.Add(sequence[i]);
             }
 
-            string trackName = "Error";
-            int[] timeSignature = new int[2];
-            string tempo = "Error";
+            List<int[]> timeSignatures = new List<int[]>();
+            List<int> ticksPerBeats = new List<int>();
             List<Tuple<ChannelMessage, MidiEvent>> notes = new List<Tuple<ChannelMessage, MidiEvent>>();
-            int ticksPerBeat = sequence.Division;
-            //int ticksPerBeat = (int)(sequence.Division * (noteLength / 0.25));
-            //wat is notelength hier? moet je de ticksperbeat per noot uitrekenen?
+            double noteLength;
 
             foreach (Track i in tracks)
             {
@@ -51,26 +48,22 @@ namespace DPA_Musicsheets
                     if (midiEvent.MidiMessage.MessageType == MessageType.Meta)
                     {
                         var metaMessage = midiEvent.MidiMessage as MetaMessage;
-                        if (metaMessage.MetaType == MetaType.TrackName)
-                        {
-                            trackName = MidiReader.GetMetaString(metaMessage);
-                        }
-                        if (metaMessage.MetaType == MetaType.Tempo)
-                        {
-                            tempo = MidiReader.GetMetaString(metaMessage);
-                        }
                         if (metaMessage.MetaType == MetaType.TimeSignature)
                         {
                             byte[] bytes = metaMessage.GetBytes();
-                            timeSignature[0] = bytes[0];    //kwart = 1 / 0.25 = 4                   
-                            timeSignature[1] = (int)Math.Pow(2, bytes[1]);
+                            int[] timesignature = { bytes[0], (int)Math.Pow(2, bytes[1]) };
+                            timeSignatures.Add(timesignature);
+                            noteLength = 1.0/ timesignature[1];
+                            ticksPerBeats.Add((int)(sequence.Division * (noteLength / 0.25)));
                         }
                     }
                 }
                 #endregion
             }
 
-            trackBuilder.buildMidiToObjectTrack(trackName, timeSignature, tempo, ticksPerBeat, notes);
+
+            trackBuilder.buildMidiToObjectTrack(timeSignatures, ticksPerBeats, notes);
+            //Je slaat nu beide timesignatures met hun tpb op. Hoe weet je wanneer de volgende timesignature ingaat?
         }
 
         public TrackObject getTrackObject()

@@ -9,60 +9,43 @@ namespace DPA_Musicsheets.MusicObjects
 {
     class TrackObject
     {
+        public List<int[]> timeSignature { get; set; }
 
-        public string trackName { get; set; }
-
-        public int[] timeSignature { get; set; }
-
-        public int tempo { get; set; }
-
-        public int ticksPerBeat { get; set; }
-        public List<NoteObject> notes { get; set; }
+        public List<int> ticksPerBeat { get; set; }
+        public List<Symbol> notes { get; set; }
 
         public TrackObject()
         {
-            notes = new List<NoteObject>();
+            notes = new List<Symbol>();
         }
-
-        private int lastNoteData2 = 1;
 
         public void addNote(ChannelMessage message, MidiEvent midiEvent)
         {
-            
-            //rust bereken: vorige noot had message.data2 == 0 en huidige noot absoluteticks is later dan vorige noot
+            Symbol note;
 
-            //case: Rust
-            if (lastNoteData2 == 0 && message.Data2 == 0)
-            {           
-                if (midiEvent.AbsoluteTicks > notes[notes.Count - 1].absoluteTicks)
-                {
-                    NoteObject note = new NoteObject();
-                    note.absoluteTicks = midiEvent.AbsoluteTicks;
-                    note.octaaf = message.Data1 / 12;
-                    note.setToonhoogte(message.Data1 % 12);
-                    note.rust = true;
-                    notes.Add(note);
-                    lastNoteData2 = message.Data2;
-                    return;
-                }
-            }
 
-            lastNoteData2 = message.Data2;
-
-            //case: normale Noot
-            if (message.Data2 == 90)
+            if (message.Data2 == 90 && midiEvent.DeltaTicks > 0) //Rust
             {
-                NoteObject note = new NoteObject();
+                note = new RestObject();
                 note.absoluteTicks = midiEvent.AbsoluteTicks;
                 note.octaaf = message.Data1 / 12;
                 note.setToonhoogte(message.Data1 % 12);
                 notes.Add(note);
             }
-            else
-            //case toonhoogte van vorige noot zetten
+            else if (message.Data2 == 90)
             {
-                notes[notes.Count - 1].nootduur = ((double)midiEvent.AbsoluteTicks - (double)notes[notes.Count - 1].absoluteTicks) / (double)ticksPerBeat;
-                double percentageOfWholeNote = (1.0 / (double)timeSignature[1]) * notes[notes.Count - 1].nootduur;
+                note = new NoteObject();
+                note.absoluteTicks = midiEvent.AbsoluteTicks;
+                note.octaaf = message.Data1 / 12;
+                note.setToonhoogte(message.Data1 % 12);
+                notes.Add(note);
+            }
+            
+
+            if (message.Data2 == 0)
+            {
+                notes[notes.Count - 1].nootduur = ((double)midiEvent.AbsoluteTicks - (double)notes[notes.Count - 1].absoluteTicks) / (double)ticksPerBeat[0];
+                double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * notes[notes.Count - 1].nootduur;
 
                 for (int noteLength = 32; noteLength >= 1; noteLength /= 2)
                 {
@@ -80,8 +63,6 @@ namespace DPA_Musicsheets.MusicObjects
                     }     
                 }
             }
-
-           
         }
       
     }

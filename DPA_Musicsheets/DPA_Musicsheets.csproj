@@ -90,9 +90,11 @@
   <ItemGroup>
     <Compile Include="MidiPlayer.cs" />
     <Compile Include="MidiReader.cs" />
+    <Compile Include="MusicObjects\Symbols\RestObject.cs" />
+    <Compile Include="MusicObjects\Symbols\Symbol.cs" />
     <Compile Include="MusicObjects\TrackObjectBuilder.cs" />
     <Compile Include="MusicObjects\TrackObject.cs" />
-    <Compile Include="MusicObjects\NoteObject.cs" />
+    <Compile Include="MusicObjects\Symbols\NoteObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
