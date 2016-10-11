@@ -11,8 +11,9 @@ namespace DPA_Musicsheets
     class LyToObject
     {
         private string[] lilyPondContents;
-        private NoteObject latestNote;
+        private Symbol latestNote;
         private TrackObjectBuilder trackObjectBuilder;
+        private List<int[]> maatSoort;
 
         private enum contentType
         {
@@ -34,12 +35,14 @@ namespace DPA_Musicsheets
             {
                 lilyPondContents[i] = lilyPondContents[i].Replace("\r\n", string.Empty);
             }
-            readContent();
 
-           
+            maatSoort = new List<int[]>();
+
+            trackObjectBuilder = new TrackObjectBuilder();
+            trackObjectBuilder.buildLyToObjectTrack(maatSoort, readContent());
         }
 
-        private void readContent()
+        private List<Symbol> readContent()
         {
             int alternativeNr = 0;
 
@@ -49,8 +52,8 @@ namespace DPA_Musicsheets
 
             contentType type = contentType.none;
 
-            List<NoteObject> notes = new List<NoteObject>();                        // alle noten die geen onderdeel zijn van alternative
-            List<List<NoteObject>> alternatives = new List<List<NoteObject>>();     // alle alternatives + noten per alternative
+            List<Symbol> notes = new List<Symbol>();                        // alle noten die geen onderdeel zijn van alternative
+            List<List<Symbol>> alternatives = new List<List<Symbol>>();     // alle alternatives + noten per alternative
 
             for (int i = 2; i < lilyPondContents.Length; i++)
             {
@@ -62,6 +65,7 @@ namespace DPA_Musicsheets
                         break;
                     case "\\time":
                         maatsoort = lilyPondContents[i + 1];
+                        getProperMaatsoort(maatsoort);
                         i++;
                         break;
                     case "\\repeat":
@@ -87,7 +91,7 @@ namespace DPA_Musicsheets
                         if (type == contentType.alternativeBlok)
                         {
                             type = contentType.alternative;
-                            alternatives.Add(new List<NoteObject>());
+                            alternatives.Add(new List<Symbol>());
                         }
                         break;
                     case "}":
@@ -114,21 +118,33 @@ namespace DPA_Musicsheets
                         break;
                 }
             }
+            return notes;
         }
 
-        private NoteObject createNote(string note)
+        private void getProperMaatsoort(string maatsoort)
         {
-            NoteObject newNote = new NoteObject();
+            string s1 = maatsoort.Substring(0, maatsoort.IndexOf("/"));
+            string s2 = maatsoort.Substring(maatsoort.IndexOf("/") + 1);
+            // TODO : opslaan als int[]
+            //maatSoort.Add(Int32.Parse(s1));
+            //maatSoort.Add(Int32.Parse(s2));
+        }
 
-            newNote.toonHoogte = note.Substring(0, 1);       // a, b, c etc..
+        private Symbol createNote(string note)
+        {
+            Symbol newNote;
+            string toonhoogte = note.Substring(0, 1);       // a, b, c etc..
 
-            if (newNote.toonHoogte != "r")
+            if (toonhoogte == "r")
             {
-                newNote.octaaf = setCurrentOctaaf(note);
+                newNote = new RestObject();
+                newNote.octaaf = latestNote.octaaf;
             }
             else
             {
-                newNote.octaaf = latestNote.octaaf;
+                newNote = new NoteObject();
+                newNote.toonHoogte = toonhoogte;
+                newNote.octaaf = setCurrentOctaaf(note);
             }
 
             newNote.kruisMol = addKruisMol(note);
@@ -151,7 +167,7 @@ namespace DPA_Musicsheets
             return newNote;
         }
 
-        private NoteObject createMaatStreep()
+        private Symbol createMaatStreep()
         {
             NoteObject maatStreep = new NoteObject();
 
@@ -187,20 +203,20 @@ namespace DPA_Musicsheets
 
             // TODO : zoek uit hoe de juiste octaaf berekend kan worden
             // zoek dichtsbijzijnde toonhoogte en pas octaaf daarop aan
-            while (toonHoogtes[octaafOmhoog] != toonHoogte)
-            {
-                octaafOmhoog++;
-            }
+            //while (toonHoogtes[octaafOmhoog] != toonHoogte)
+            //{
+            //    octaafOmhoog++;
+            //}
 
-            while (toonHoogtes[octaafOmlaag] != toonHoogte)
-            {
-                octaafOmlaag--;
-            }
+            //while (toonHoogtes[octaafOmlaag] != toonHoogte)
+            //{
+            //    octaafOmlaag--;
+            //}
 
-            if (octaafOmhoog <= octaafOmlaag)
-            {
+            //if (octaafOmhoog <= octaafOmlaag)
+            //{
 
-            }
+            //}
 
             // handel de comma/apostrophe af
             if (note.Contains(","))

@@ -51,7 +51,7 @@ namespace DPA_Musicsheets.MusicObjects
 
         public void addLyNote(Symbol note)
         {
-
+            notes.Add(note);
         }
 
         private void calculateNoteLength(MidiEvent midiEvent)

@@ -25,13 +25,16 @@ namespace DPA_Musicsheets.MusicObjects
             tracks.Add(track);
         }
 
-        public void buildLyToObjectTrack(List<Symbol> notes)
+        public void buildLyToObjectTrack(List<int[]> timeSignature, List<Symbol> notes)
         {
             TrackObject track = new TrackObject();
+            track.timeSignature = timeSignature;
 
             foreach(Symbol s in notes){
                 track.addLyNote(s);
             }
+
+            tracks.Add(track);
         }
     }
 }
