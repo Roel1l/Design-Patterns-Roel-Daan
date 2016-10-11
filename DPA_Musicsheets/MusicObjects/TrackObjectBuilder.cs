@@ -1,4 +1,5 @@
-﻿using Sanford.Multimedia.Midi;
+﻿using DPA_Musicsheets.MusicObjects.Symbols;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace DPA_Musicsheets.MusicObjects
 
             foreach (Tuple<ChannelMessage, MidiEvent> c in notes)
             {
+                if (c.Item2.AbsoluteTicks >= 16128) track.addSymbol(new TimeSignatureObject());
                 track.addMidiNote(c.Item1, c.Item2);
             }
 

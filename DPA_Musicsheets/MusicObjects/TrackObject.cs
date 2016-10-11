@@ -54,6 +54,11 @@ namespace DPA_Musicsheets.MusicObjects
 
         }
 
+        public void addSymbol(Symbol symbol)
+        {
+            notes.Add(symbol);
+        }
+
         private void calculateNoteLength(MidiEvent midiEvent)
         {
             notes[notes.Count - 1].nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[0];

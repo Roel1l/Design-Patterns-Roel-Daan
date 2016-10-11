@@ -111,7 +111,6 @@ namespace DPA_Musicsheets
         {
             staff.ClearMusicalIncipit();
             staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
-            staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, (uint)track.timeSignature[0][0], (uint)track.timeSignature[0][1]));
 
             double maatvol = 0;
   
