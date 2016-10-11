@@ -19,10 +19,9 @@ namespace DPA_Musicsheets.MusicObjects
             notes = new List<Symbol>();
         }
 
-        public void addNote(ChannelMessage message, MidiEvent midiEvent)
+        public void addMidiNote(ChannelMessage message, MidiEvent midiEvent)
         {
             Symbol note;
-
 
             if (message.Data2 == 90 && midiEvent.DeltaTicks > 0) //Rust
             {
@@ -31,8 +30,10 @@ namespace DPA_Musicsheets.MusicObjects
                 note.octaaf = message.Data1 / 12;
                 note.setToonhoogte(message.Data1 % 12);
                 notes.Add(note);
+
+                calculateNoteLength(midiEvent);
             }
-            else if (message.Data2 == 90)
+            if (message.Data2 == 90) //Noot
             {
                 note = new NoteObject();
                 note.absoluteTicks = midiEvent.AbsoluteTicks;
@@ -44,23 +45,34 @@ namespace DPA_Musicsheets.MusicObjects
 
             if (message.Data2 == 0)
             {
-                notes[notes.Count - 1].nootduur = ((double)midiEvent.AbsoluteTicks - (double)notes[notes.Count - 1].absoluteTicks) / (double)ticksPerBeat[0];
-                double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * notes[notes.Count - 1].nootduur;
+                calculateNoteLength(midiEvent);
+            }
+        }
 
-                for (int noteLength = 32; noteLength >= 1; noteLength /= 2)
+        public void addLyNote(Symbol note)
+        {
+
+        }
+
+        private void calculateNoteLength(MidiEvent midiEvent)
+        {
+            notes[notes.Count - 1].nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[0];
+            double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * notes[notes.Count - 1].nootduur;
+
+            for (int noteLength = 32; noteLength >= 1; noteLength /= 2)
+            {
+                double absoluteNoteLength = (1.0 / noteLength);
+
+                if (percentageOfWholeNote <= absoluteNoteLength)
                 {
-                    double absoluteNoteLength = (1.0 / noteLength);
-
-                    if (percentageOfWholeNote <= absoluteNoteLength)
-                    {
-                        notes[notes.Count - 1].lengte = noteLength;
-                        return;
-                    }
-                    if (percentageOfWholeNote == 1.5 * absoluteNoteLength)
-                    {
-                        notes[notes.Count - 1].lengte = noteLength / 3 * 2;
-                        notes[notes.Count - 1].punt = 1;
-                    }     
+                    notes[notes.Count - 1].lengte = noteLength;
+                    return;
+                }
+                if (percentageOfWholeNote == 1.5 * absoluteNoteLength)
+                {
+                    notes[notes.Count - 1].lengte = noteLength;
+                    notes[notes.Count - 1].punt = 1;
+                    return;
                 }
             }
         }
