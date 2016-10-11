@@ -49,25 +49,9 @@ namespace DPA_Musicsheets.MusicObjects
             if (this.toonHoogte.Contains("#")) this.kruisMol = 1;
         }
 
-        public MusicalSymbolDuration noteLengthToMusicalSymbolDuration(int length)
-        {
-            switch (length)
-            {
-                case 1:
-                    return MusicalSymbolDuration.Whole;
-                case 2:
-                    return MusicalSymbolDuration.Half;
-                case 4:
-                    return MusicalSymbolDuration.Quarter;
-                case 8:
-                    return MusicalSymbolDuration.Eighth;
-                case 16:
-                    return MusicalSymbolDuration.Sixteenth;
-                default:
-                    return MusicalSymbolDuration.Unknown;
-            }
-        }
-        public abstract MusicalSymbol getType();
+        public abstract MusicalSymbolDuration noteLengthToMusicalSymbolDuration(int length);
+
+        public abstract MusicalSymbol getSymbol();
 
 
     }

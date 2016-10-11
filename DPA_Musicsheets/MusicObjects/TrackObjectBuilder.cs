@@ -19,15 +19,19 @@ namespace DPA_Musicsheets.MusicObjects
 
             foreach (Tuple<ChannelMessage, MidiEvent> c in notes)
             {
-                track.addNote(c.Item1, c.Item2);
+                track.addMidiNote(c.Item1, c.Item2);
             }
 
             tracks.Add(track);
         }
 
-        public void buildLyToObjectTrack()
+        public void buildLyToObjectTrack(List<Symbol> notes)
         {
+            TrackObject track = new TrackObject();
 
+            foreach(Symbol s in notes){
+                track.addLyNote(s);
+            }
         }
     }
 }

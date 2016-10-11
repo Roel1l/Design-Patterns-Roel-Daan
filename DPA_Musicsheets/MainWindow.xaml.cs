@@ -104,9 +104,7 @@ namespace DPA_Musicsheets
             if (openFileDialog.ShowDialog() == true)
             {
                 txt_MidiFilePath.Text = openFileDialog.FileName;
-            }
-
-            
+            }            
         }
 
         private void drawTrack(TrackObject track)
@@ -127,31 +125,9 @@ namespace DPA_Musicsheets
                 
                 Console.WriteLine(maatvol);
                 maatvol += symbol.nootduur;
-                staff.AddMusicalSymbol(symbol.getType());
+                staff.AddMusicalSymbol(symbol.getSymbol());
             }
         }
-
-        
-
-        public MusicalSymbolDuration noteLengthToMusicalSymbolDuration(int length)
-        {
-            switch (length)
-            {
-                case 1:
-                    return MusicalSymbolDuration.Whole;
-                case 2:
-                    return MusicalSymbolDuration.Half;
-                case 4:
-                    return MusicalSymbolDuration.Quarter;
-                case 8:
-                    return MusicalSymbolDuration.Eighth;
-                case 16:
-                    return MusicalSymbolDuration.Sixteenth;
-                default:
-                    return MusicalSymbolDuration.Unknown;
-            }
-        }
-
 
         private void btn_Stop_Click(object sender, RoutedEventArgs e)
         {
@@ -172,9 +148,8 @@ namespace DPA_Musicsheets
             else if(extension == "ly")
             {
                 LyToObject lyToObject = new LyToObject(txt_MidiFilePath.Text);
-            }
-
-           
+                drawTrack(lyToObject.getTrackObject());
+            }          
         }
 
         private void ShowMidiTracks(IEnumerable<MidiTrack> midiTracks)
