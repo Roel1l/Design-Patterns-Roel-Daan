@@ -125,9 +125,10 @@ namespace DPA_Musicsheets
         {
             string s1 = maatsoort.Substring(0, maatsoort.IndexOf("/"));
             string s2 = maatsoort.Substring(maatsoort.IndexOf("/") + 1);
-            // TODO : opslaan als int[]
-            //maatSoort.Add(Int32.Parse(s1));
-            //maatSoort.Add(Int32.Parse(s2));
+
+            int[] i = { Int32.Parse(s1), Int32.Parse(s2) };
+
+            maatSoort.Add(i);
         }
 
         private Symbol createNote(string note)
@@ -143,7 +144,7 @@ namespace DPA_Musicsheets
             else
             {
                 newNote = new NoteObject();
-                newNote.toonHoogte = toonhoogte;
+                newNote.toonHoogte = toonhoogte.ToUpper();
                 newNote.octaaf = setCurrentOctaaf(note);
             }
 
@@ -195,42 +196,90 @@ namespace DPA_Musicsheets
         private int setCurrentOctaaf(string note)
         {
             int nieuwOctaaf = latestNote.octaaf;
-            List<char> toonHoogtes = new List<char> { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
-            char toonHoogte = note.Substring(0, 1).First();
+            string latestToonHoogte;
 
-            int octaafOmhoog = 0;
-            int octaafOmlaag = toonHoogtes.Count - 1;
+            if (latestNote.toonHoogte != null)
+            {
+                latestToonHoogte = latestNote.toonHoogte.ToUpper();
+            }
+            else
+            {
+                latestToonHoogte = "C";
+            }
 
-            // TODO : zoek uit hoe de juiste octaaf berekend kan worden
-            // zoek dichtsbijzijnde toonhoogte en pas octaaf daarop aan
-            //while (toonHoogtes[octaafOmhoog] != toonHoogte)
-            //{
-            //    octaafOmhoog++;
-            //}
+            string nieuwToonHoogte = note.Substring(0, 1).ToUpper();
+            List<string> toonHoogtes = new List<string> { "A", "B", "C", "D", "E", "F", "G" };
 
-            //while (toonHoogtes[octaafOmlaag] != toonHoogte)
-            //{
-            //    octaafOmlaag--;
-            //}
+            // dit is om alles eruit te halen dat nog niet lukt
+            if (!toonHoogtes.Contains(nieuwToonHoogte) || !toonHoogtes.Contains(latestToonHoogte)) {
+                return nieuwOctaaf;
+            }
 
-            //if (octaafOmhoog <= octaafOmlaag)
-            //{
+            int rechtsOm = toonHoogtes.IndexOf(latestToonHoogte);
+            bool rechtsWrap = false;
+            int linksOm = toonHoogtes.IndexOf(latestToonHoogte);
+            bool linksWrap = false;
 
-            //}
+            while (toonHoogtes[rechtsOm] != nieuwToonHoogte)
+            {
+                if (toonHoogtes[rechtsOm] == "G")
+                {
+                    rechtsOm = 0;
+                    rechtsWrap = true;
+                }
+                else
+                {
+                    rechtsOm++;
+                }
+            }
+
+            while (toonHoogtes[linksOm] != nieuwToonHoogte)
+            {
+                if (toonHoogtes[linksOm] == "A")
+                {
+                    linksOm = toonHoogtes.Count - 1;
+                    linksWrap = true;
+                }
+                else
+                {
+                    linksOm--;
+                }
+            }
+
+            if (rechtsOm < linksOm)
+            {
+                if (rechtsWrap)
+                {
+                    if (nieuwOctaaf <= 10)
+                    {
+                        nieuwOctaaf++;
+                    }
+                }
+            }
+            else if (linksOm < rechtsOm)
+            {
+                if (linksWrap)
+                {
+                    if (nieuwOctaaf >= 0)
+                    {
+                        nieuwOctaaf--;
+                    }
+                }
+            }
 
             // handel de comma/apostrophe af
             if (note.Contains(","))
             {
-                if (nieuwOctaaf >= 1)
+                if (nieuwOctaaf >= 0)
                 {
-                    nieuwOctaaf = nieuwOctaaf - 1;
+                    nieuwOctaaf--;
                 }
             }
             else if (note.Contains("'"))
             {
-                if (nieuwOctaaf < 8)
+                if (nieuwOctaaf <= 10)
                 {
-                    nieuwOctaaf = nieuwOctaaf + 1;
+                    nieuwOctaaf++;
                 }
             }
 
