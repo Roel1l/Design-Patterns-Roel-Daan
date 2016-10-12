@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -41,6 +41,7 @@ namespace DPA_Musicsheets
             InitializeComponent();
             DataContext = MidiTracks;
             FillPSAMViewer();
+            textBox.Visibility = Visibility.Hidden;
             //notenbalk.LoadFromXmlFile("Resources/example.xml");
         }
 
@@ -100,13 +101,33 @@ namespace DPA_Musicsheets
 
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog() { Filter = "Midi Files(.mid)|*.mid" };
+            OpenFileDialog openFileDialog = new OpenFileDialog() { Filter = "LilyPond Files (.ly)|*ly|Midi Files(.mid)|*.mid" };
             if (openFileDialog.ShowDialog() == true)
             {
                 txt_MidiFilePath.Text = openFileDialog.FileName;
             }            
         }
 
+
+        private void textBox_TextChanged(object sender, RoutedEventArgs e)
+        {
+
+            
+        }
+        private void CheckUpdate()
+        {
+            Timer aTimer = new Timer();
+            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            aTimer.Interval = 3000;
+            aTimer.Enabled = true;
+            Console.WriteLine("Timer start");
+        }
+
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+                //aTimer.Enabled = false;
+                Console.WriteLine("Update");       
+        }
         private void drawTrack(TrackObject track)
         {
             staff.ClearMusicalIncipit();
@@ -147,11 +168,16 @@ namespace DPA_Musicsheets
                 ShowMidiTracks(MidiReader.ReadMidi(txt_MidiFilePath.Text));
                 MidiToObject midiToObject = new MidiToObject(txt_MidiFilePath.Text);
                 drawTrack(midiToObject.getTrackObject());
+                textBox.Visibility = Visibility.Hidden;
+                tabCtrl_MidiContent.Visibility = Visibility.Visible;
             }
             else if(extension == "ly")
             {
-                LyToObject lyToObject = new LyToObject(txt_MidiFilePath.Text);
-                drawTrack(lyToObject.getTrackObject());
+                //LyToObject lyToObject = new LyToObject(txt_MidiFilePath.Text);
+                //drawTrack(lyToObject.getTrackObject());
+                textBox.Visibility = Visibility.Visible;
+                tabCtrl_MidiContent.Visibility = Visibility.Hidden;
+                textBox.Text = File.ReadAllText(txt_MidiFilePath.Text);
             }          
         }
 
