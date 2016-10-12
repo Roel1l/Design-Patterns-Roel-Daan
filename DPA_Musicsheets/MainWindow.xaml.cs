@@ -30,6 +30,10 @@ namespace DPA_Musicsheets
         private MidiPlayer _player;
         public ObservableCollection<MidiTrack> MidiTracks { get; private set; }
 
+        private DateTime _now;
+        private Timer _timer = new Timer();
+        private bool _typed = false;
+
         // De OutputDevice is een midi device of het midikanaal van je PC.
         // Hierop gaan we audio streamen.
         // DeviceID 0 is je audio van je PC zelf.
@@ -42,6 +46,7 @@ namespace DPA_Musicsheets
             DataContext = MidiTracks;
             FillPSAMViewer();
             textBox.Visibility = Visibility.Hidden;
+            timer();
             //notenbalk.LoadFromXmlFile("Resources/example.xml");
         }
 
@@ -108,25 +113,27 @@ namespace DPA_Musicsheets
             }            
         }
 
-
-        private void textBox_TextChanged(object sender, RoutedEventArgs e)
+        private void textBox_keyUp(object sender, RoutedEventArgs e)
         {
-
-            
-        }
-        private void CheckUpdate()
-        {
-            Timer aTimer = new Timer();
-            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Interval = 3000;
-            aTimer.Enabled = true;
-            Console.WriteLine("Timer start");
+            _typed = true;
+            _now = DateTime.Now;
         }
 
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        private void timer()
         {
-                //aTimer.Enabled = false;
-                Console.WriteLine("Update");       
+            _timer.Elapsed += new ElapsedEventHandler(UpdateStaff);
+            _timer.Interval = 500;
+            _timer.Enabled = true;
+        }
+
+        private void UpdateStaff(object source, ElapsedEventArgs e)
+        {
+            TimeSpan timeElapsed = DateTime.Now - _now;
+            if (timeElapsed.TotalMilliseconds > 500 && _typed)
+            {
+                Console.WriteLine("Update!");
+                _typed = false;
+            }     
         }
         private void drawTrack(TrackObject track)
         {
@@ -199,6 +206,7 @@ namespace DPA_Musicsheets
             {
                 _player.Dispose();
             }
+            if (_timer != null) _timer.Dispose();
         }
     }
 }
