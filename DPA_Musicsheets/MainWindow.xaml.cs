@@ -110,22 +110,25 @@ namespace DPA_Musicsheets
         private void drawTrack(TrackObject track)
         {
             staff.ClearMusicalIncipit();
+            staff.Width = 500;
             staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
-            staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, (uint)track.timeSignature[0][0], (uint)track.timeSignature[0][1]));
 
             double maatvol = 0;
   
             foreach (Symbol symbol in track.notes)
             {
-                if(maatvol >= track.timeSignature[0][1])
+                int a = symbol.absoluteTicks >= 16128 && track.timeSignature.Count > 1 ? 1 : 0;
+                if (maatvol >= track.timeSignature[a][1])
                 {
                     staff.AddMusicalSymbol(new Barline());
-                    maatvol = 0;           
+                    maatvol = 0; 
+                              
                 }
                 
                 Console.WriteLine(maatvol);
                 maatvol += symbol.nootduur;
                 staff.AddMusicalSymbol(symbol.getSymbol());
+                staff.Width += 30;
             }
         }
 
