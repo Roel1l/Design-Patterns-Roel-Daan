@@ -10,9 +10,9 @@ namespace DPA_Musicsheets.MusicObjects
     class TrackObject
     {
         public List<int[]> timeSignature { get; set; }
-
         public List<int> ticksPerBeat { get; set; }
         public List<Symbol> notes { get; set; }
+        public int currTimeSignature { get; set; }
 
         public TrackObject()
         {
@@ -41,7 +41,7 @@ namespace DPA_Musicsheets.MusicObjects
                 note.setToonhoogte(message.Data1 % 12);
                 notes.Add(note);
             }
-            
+
 
             if (message.Data2 == 0)
             {
@@ -61,7 +61,7 @@ namespace DPA_Musicsheets.MusicObjects
 
         private void calculateNoteLength(MidiEvent midiEvent)
         {
-            notes[notes.Count - 1].nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[0];
+            notes[notes.Count - 1].nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[currTimeSignature];
             double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * notes[notes.Count - 1].nootduur;
 
             for (int noteLength = 32; noteLength >= 1; noteLength /= 2)

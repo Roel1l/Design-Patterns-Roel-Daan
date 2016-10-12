@@ -17,10 +17,24 @@ namespace DPA_Musicsheets.MusicObjects
             TrackObject track = new TrackObject();
             track.timeSignature = timeSignature;
             track.ticksPerBeat = ticksperBeat;
+            track.currTimeSignature = 0;
+
+            bool addedFirstTimeSignature = false;
+            bool addedSecondTimeSignature = timeSignature.Count > 1 ? false : true;
 
             foreach (Tuple<ChannelMessage, MidiEvent> c in notes)
             {
-                if (c.Item2.AbsoluteTicks >= 16128) track.addSymbol(new TimeSignatureObject());
+                if (c.Item2.AbsoluteTicks >= 16128 && !addedSecondTimeSignature)
+                {
+                    track.addSymbol(new TimeSignatureObject() { timeSignature = new int[] { timeSignature[1][0], timeSignature[1][1] } });
+                    addedSecondTimeSignature = true;
+                    track.currTimeSignature = 1;
+                }
+                else if(!addedFirstTimeSignature)
+                {
+                    track.addSymbol(new TimeSignatureObject() { timeSignature = new int[] { timeSignature[0][0], timeSignature[0][1] } });
+                    addedFirstTimeSignature = true;
+                }
                 track.addMidiNote(c.Item1, c.Item2);
             }
 
