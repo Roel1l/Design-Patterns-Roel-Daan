@@ -99,6 +99,7 @@ namespace DPA_Musicsheets
             {
                 _player.Dispose();
             }
+            
 
             _player = new MidiPlayer(_outputDevice);
             _player.Play(txt_MidiFilePath.Text);
