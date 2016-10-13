@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="MidiPlayer.cs" />
     <Compile Include="MidiReader.cs" />
+    <Compile Include="MusicObjects\Symbols\MaatStreepObject.cs" />
     <Compile Include="MusicObjects\Symbols\RestObject.cs" />
     <Compile Include="MusicObjects\Symbols\Symbol.cs" />
     <Compile Include="MusicObjects\Symbols\TimeSignatureObject.cs" />

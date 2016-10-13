@@ -52,44 +52,44 @@ namespace DPA_Musicsheets
 
         private void FillPSAMViewer()
         {
-            staff.ClearMusicalIncipit();
+            //staff.ClearMusicalIncipit();
 
-            // Clef = sleutel
-            staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
-            staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, 4, 4));
-            /* 
-                The first argument of Note constructor is a string representing one of the following names of steps: A, B, C, D, E, F, G. 
-                The second argument is number of sharps (positive number) or flats (negative number) where 0 means no alteration. 
-                The third argument is the number of an octave. 
-                The next arguments are: duration of the note, stem direction and type of tie (NoteTieType.None if the note is not tied). 
-                The last argument is a list of beams. If the note doesn't have any beams, it must still have that list with just one 
-                    element NoteBeamType.Single (even if duration of the note is greater than eighth). 
-                    To make it clear how beamlists work, let's try to add a group of two beamed sixteenths and eighth:
-                        Note s1 = new Note("A", 0, 4, MusicalSymbolDuration.Sixteenth, NoteStemDirection.Down, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Start, NoteBeamType.Start});
-                        Note s2 = new Note("C", 1, 5, MusicalSymbolDuration.Sixteenth, NoteStemDirection.Down, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Continue, NoteBeamType.End });
-                        Note e = new Note("D", 0, 5, MusicalSymbolDuration.Eighth, NoteStemDirection.Down, NoteTieType.None,new List<NoteBeamType>() { NoteBeamType.End });
-                        viewer.AddMusicalSymbol(s1);
-                        viewer.AddMusicalSymbol(s2);
-                        viewer.AddMusicalSymbol(e); 
-            */
+            //// Clef = sleutel
+            //staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
+            //staff.AddMusicalSymbol(new TimeSignature(TimeSignatureType.Numbers, 4, 4));
+            ///* 
+            //    The first argument of Note constructor is a string representing one of the following names of steps: A, B, C, D, E, F, G. 
+            //    The second argument is number of sharps (positive number) or flats (negative number) where 0 means no alteration. 
+            //    The third argument is the number of an octave. 
+            //    The next arguments are: duration of the note, stem direction and type of tie (NoteTieType.None if the note is not tied). 
+            //    The last argument is a list of beams. If the note doesn't have any beams, it must still have that list with just one 
+            //        element NoteBeamType.Single (even if duration of the note is greater than eighth). 
+            //        To make it clear how beamlists work, let's try to add a group of two beamed sixteenths and eighth:
+            //            Note s1 = new Note("A", 0, 4, MusicalSymbolDuration.Sixteenth, NoteStemDirection.Down, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Start, NoteBeamType.Start});
+            //            Note s2 = new Note("C", 1, 5, MusicalSymbolDuration.Sixteenth, NoteStemDirection.Down, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Continue, NoteBeamType.End });
+            //            Note e = new Note("D", 0, 5, MusicalSymbolDuration.Eighth, NoteStemDirection.Down, NoteTieType.None,new List<NoteBeamType>() { NoteBeamType.End });
+            //            viewer.AddMusicalSymbol(s1);
+            //            viewer.AddMusicalSymbol(s2);
+            //            viewer.AddMusicalSymbol(e); 
+            //*/
 
-            staff.AddMusicalSymbol(new Note("A", 0, 4, MusicalSymbolDuration.Sixteenth, NoteStemDirection.Down, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Start, NoteBeamType.Start }));
-            staff.AddMusicalSymbol(new Note("C", 1, 5, MusicalSymbolDuration.Sixteenth, NoteStemDirection.Down, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Continue, NoteBeamType.End }));
-            staff.AddMusicalSymbol(new Note("D", 0, 5, MusicalSymbolDuration.Eighth, NoteStemDirection.Down, NoteTieType.Start, new List<NoteBeamType>() { NoteBeamType.End }));
-            staff.AddMusicalSymbol(new Barline());
+            //staff.AddMusicalSymbol(new Note("A", 0, 4, MusicalSymbolDuration.Sixteenth, NoteStemDirection.Down, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Start, NoteBeamType.Start }));
+            //staff.AddMusicalSymbol(new Note("C", 1, 5, MusicalSymbolDuration.Sixteenth, NoteStemDirection.Down, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Continue, NoteBeamType.End }));
+            //staff.AddMusicalSymbol(new Note("D", 0, 5, MusicalSymbolDuration.Eighth, NoteStemDirection.Down, NoteTieType.Start, new List<NoteBeamType>() { NoteBeamType.End }));
+            //staff.AddMusicalSymbol(new Barline());
 
-            staff.AddMusicalSymbol(new Note("D", 0, 5, MusicalSymbolDuration.Whole, NoteStemDirection.Down, NoteTieType.Stop, new List<NoteBeamType>() { NoteBeamType.Single }));
-            staff.AddMusicalSymbol(new Note("E", 0, 4, MusicalSymbolDuration.Quarter, NoteStemDirection.Up, NoteTieType.Start, new List<NoteBeamType>() { NoteBeamType.Single }) { NumberOfDots = 1 });
-            staff.AddMusicalSymbol(new Barline());
+            //staff.AddMusicalSymbol(new Note("D", 0, 5, MusicalSymbolDuration.Whole, NoteStemDirection.Down, NoteTieType.Stop, new List<NoteBeamType>() { NoteBeamType.Single }));
+            //staff.AddMusicalSymbol(new Note("E", 0, 4, MusicalSymbolDuration.Quarter, NoteStemDirection.Up, NoteTieType.Start, new List<NoteBeamType>() { NoteBeamType.Single }) { NumberOfDots = 1 });
+            //staff.AddMusicalSymbol(new Barline());
 
-            staff.AddMusicalSymbol(new Note("C", 0, 4, MusicalSymbolDuration.Half, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single }));
-            staff.AddMusicalSymbol(
-                new Note("E", 0, 4, MusicalSymbolDuration.Half, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single })
-                { IsChordElement = true });
-            staff.AddMusicalSymbol(
-                new Note("G", 0, 4, MusicalSymbolDuration.Half, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single })
-                { IsChordElement = true });
-            staff.AddMusicalSymbol(new Barline());
+            //staff.AddMusicalSymbol(new Note("C", 0, 4, MusicalSymbolDuration.Half, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single }));
+            //staff.AddMusicalSymbol(
+            //    new Note("E", 0, 4, MusicalSymbolDuration.Half, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single })
+            //    { IsChordElement = true });
+            //staff.AddMusicalSymbol(
+            //    new Note("G", 0, 4, MusicalSymbolDuration.Half, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single })
+            //    { IsChordElement = true });
+            //staff.AddMusicalSymbol(new Barline());
 
         }
 
@@ -113,7 +113,7 @@ namespace DPA_Musicsheets
             }            
         }
 
-        private void textBox_keyUp(object sender, RoutedEventArgs e)
+        private void textBox_textChanged(object sender, RoutedEventArgs e)
         {
             _typed = true;
             _now = DateTime.Now;
@@ -122,19 +122,26 @@ namespace DPA_Musicsheets
         private void timer()
         {
             _timer.Elapsed += new ElapsedEventHandler(UpdateStaff);
-            _timer.Interval = 500;
+            _timer.Interval = 1500;
             _timer.Enabled = true;
         }
 
         private void UpdateStaff(object source, ElapsedEventArgs e)
         {
             TimeSpan timeElapsed = DateTime.Now - _now;
-            if (timeElapsed.TotalMilliseconds > 500 && _typed)
+            if (timeElapsed.TotalMilliseconds > 1500 && _typed)
             {
                 Console.WriteLine("Update!");
                 _typed = false;
+
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    LyToObject lyToObject = new LyToObject(textBox.Text);
+                    drawTrack(lyToObject.getTrackObject());
+                }));
+
             }     
         }
+
         private void drawTrack(TrackObject track)
         {
             staff.ClearMusicalIncipit();
@@ -142,21 +149,22 @@ namespace DPA_Musicsheets
             staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
 
             double maatvol = 0;
-  
-            foreach (Symbol symbol in track.notes)
+
+            if (track.notes.Count > 2)
             {
-                int a = symbol.absoluteTicks >= 16128 && track.timeSignature.Count > 1 ? 1 : 0;
-                if (maatvol >= track.timeSignature[a][1])
+                foreach (Symbol symbol in track.notes)
                 {
-                    staff.AddMusicalSymbol(new Barline());
-                    maatvol = 0; 
-                              
+                    int a = symbol.absoluteTicks >= 16128 && track.timeSignature.Count > 1 ? 1 : 0;
+                    if (maatvol >= track.timeSignature[a][1])
+                    {
+                        staff.AddMusicalSymbol(new Barline());
+                        maatvol = 0;
+                    }
+
+                    maatvol += symbol.nootduur;
+                    staff.AddMusicalSymbol(symbol.getSymbol());
+                    staff.Width += 30;
                 }
-                
-                Console.WriteLine(maatvol);
-                maatvol += symbol.nootduur;
-                staff.AddMusicalSymbol(symbol.getSymbol());
-                staff.Width += 30;
             }
         }
 
@@ -180,11 +188,11 @@ namespace DPA_Musicsheets
             }
             else if(extension == "ly")
             {
-                //LyToObject lyToObject = new LyToObject(txt_MidiFilePath.Text);
-                //drawTrack(lyToObject.getTrackObject());
                 textBox.Visibility = Visibility.Visible;
                 tabCtrl_MidiContent.Visibility = Visibility.Hidden;
                 textBox.Text = File.ReadAllText(txt_MidiFilePath.Text);
+                LyToObject lyToObject = new LyToObject(textBox.Text);
+                drawTrack(lyToObject.getTrackObject());
             }          
         }
 

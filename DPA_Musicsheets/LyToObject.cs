@@ -1,18 +1,34 @@
 ﻿using DPA_Musicsheets.MusicObjects;
+using DPA_Musicsheets.MusicObjects.Symbols;
 using System;
+
 using System.Collections.Generic;
+
 using System.Linq;
+
 using System.Text;
+
 using System.Text.RegularExpressions;
+
 using System.Threading.Tasks;
 
+
+
 namespace DPA_Musicsheets
+
 {
+
     class LyToObject
+
     {
+
         private string[] lilyPondContents;
-        private NoteObject latestNote;
+
+        private Symbol latestNote;
+
         private TrackObjectBuilder trackObjectBuilder;
+
+        private List<int[]> maatSoort;
 
         private enum contentType
         {
@@ -21,25 +37,28 @@ namespace DPA_Musicsheets
             alternative
         }
 
-
-        public LyToObject(string path)
+        public LyToObject(string content)
         {
             // relative c = octaaf 5
             latestNote = new NoteObject();
             latestNote.octaaf = 5;
-
-            lilyPondContents = System.IO.File.ReadAllText(path).Split(' ').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            lilyPondContents = content.Split(' ').Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
             for (int i = 0; i < lilyPondContents.Length; i++)
             {
                 lilyPondContents[i] = lilyPondContents[i].Replace("\r\n", string.Empty);
+                lilyPondContents[i] = lilyPondContents[i].Replace(" ", string.Empty);
             }
-            readContent();
 
-           
+            maatSoort = new List<int[]>();
+
+            trackObjectBuilder = new TrackObjectBuilder();
+            trackObjectBuilder.buildLyToObjectTrack(maatSoort, readContent());
         }
 
-        private void readContent()
+
+
+        private List<Symbol> readContent()
         {
             int alternativeNr = 0;
 
@@ -49,22 +68,23 @@ namespace DPA_Musicsheets
 
             contentType type = contentType.none;
 
-            List<NoteObject> notes = new List<NoteObject>();                        // alle noten die geen onderdeel zijn van alternative
-            List<List<NoteObject>> alternatives = new List<List<NoteObject>>();     // alle alternatives + noten per alternative
+            List<Symbol> notes = new List<Symbol>();                        // alle noten die geen onderdeel zijn van alternative
+            List<List<Symbol>> alternatives = new List<List<Symbol>>();     // alle alternatives + noten per alternative
 
             for (int i = 2; i < lilyPondContents.Length; i++)
             {
                 switch (lilyPondContents[i])
                 {
-                    case "\\tempo":
-                        tempo = lilyPondContents[i + 1];
+                   case "\\tempo":
+                       tempo = lilyPondContents[i + 1];
                         i++;
                         break;
                     case "\\time":
                         maatsoort = lilyPondContents[i + 1];
+                        notes.Add(getProperMaatsoort(maatsoort));
                         i++;
                         break;
-                    case "\\repeat":
+                    case "\\repeat":                   
                         break;
                     case "\\alternative":
                         type = contentType.alternativeBlok;
@@ -87,7 +107,7 @@ namespace DPA_Musicsheets
                         if (type == contentType.alternativeBlok)
                         {
                             type = contentType.alternative;
-                            alternatives.Add(new List<NoteObject>());
+                            alternatives.Add(new List<Symbol>());
                         }
                         break;
                     case "}":
@@ -100,35 +120,57 @@ namespace DPA_Musicsheets
                         {
                             type = contentType.none;
                         }
+
                         break;
+
                     default:
                         // gebruik deze voor de (cashew)noten
-                        if (type == contentType.alternative)
+                        if (lilyPondContents[i] != string.Empty)
                         {
-                            alternatives[alternativeNr].Add(createNote(lilyPondContents[i]));
+                            if (type == contentType.alternative) alternatives[alternativeNr].Add(createNote(lilyPondContents[i]));
+                            else notes.Add(createNote(lilyPondContents[i]));
                         }
-                        else
-                        {
-                            notes.Add(createNote(lilyPondContents[i]));
-                        }
+
                         break;
                 }
             }
+            return notes;
+
         }
 
-        private NoteObject createNote(string note)
+
+
+        private TimeSignatureObject getProperMaatsoort(string maatsoort)
         {
-            NoteObject newNote = new NoteObject();
+            string s1 = maatsoort.Substring(0, maatsoort.IndexOf("/"));
+            string s2 = maatsoort.Substring(maatsoort.IndexOf("/") + 1);
 
-            newNote.toonHoogte = note.Substring(0, 1);       // a, b, c etc..
 
-            if (newNote.toonHoogte != "r")
+            int[] i = { Int32.Parse(s1), Int32.Parse(s2) };
+
+            maatSoort.Add(i);
+
+            return new TimeSignatureObject() { timeSignature = i};
+        }
+
+
+
+        private Symbol createNote(string note)
+        {
+            Symbol newNote;
+            string toonhoogte = note.Substring(0, 1);       // a, b, c etc..
+
+            if (toonhoogte == "r")
             {
-                newNote.octaaf = setCurrentOctaaf(note);
+                newNote = new RestObject();
+                newNote.octaaf = latestNote.octaaf;
             }
+
             else
             {
-                newNote.octaaf = latestNote.octaaf;
+               newNote = new NoteObject();
+                newNote.toonHoogte = toonhoogte.ToUpper();
+                newNote.octaaf = setCurrentOctaaf(note);
             }
 
             newNote.kruisMol = addKruisMol(note);
@@ -148,82 +190,247 @@ namespace DPA_Musicsheets
             }
 
             latestNote = newNote;
+
             return newNote;
+
         }
 
-        private NoteObject createMaatStreep()
-        {
-            NoteObject maatStreep = new NoteObject();
 
-            maatStreep.isMaatStreep = true;
+
+        private Symbol createMaatStreep()
+        {
+            MaatStreepObject maatStreep = new MaatStreepObject();
 
             return maatStreep;
         }
 
+
+
         private int addKruisMol(string note)
+
         {
+
             if (note.Contains("is"))
+
             {
+
                 return 1;
+
             }
+
             else if (note.Contains("es") || note.Contains("s"))
+
             {
+
                 return -1;
+
             }
+
             else
+
             {
+
                 return 0;
+
             }
+
         }
+
+
 
         private int setCurrentOctaaf(string note)
+
         {
+
             int nieuwOctaaf = latestNote.octaaf;
-            List<char> toonHoogtes = new List<char> { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
-            char toonHoogte = note.Substring(0, 1).First();
 
-            int octaafOmhoog = 0;
-            int octaafOmlaag = toonHoogtes.Count - 1;
+            string latestToonHoogte;
 
-            // TODO : zoek uit hoe de juiste octaaf berekend kan worden
-            // zoek dichtsbijzijnde toonhoogte en pas octaaf daarop aan
-            while (toonHoogtes[octaafOmhoog] != toonHoogte)
-            {
-                octaafOmhoog++;
-            }
 
-            while (toonHoogtes[octaafOmlaag] != toonHoogte)
-            {
-                octaafOmlaag--;
-            }
 
-            if (octaafOmhoog <= octaafOmlaag)
+            if (latestNote.toonHoogte != null)
+
             {
 
+                latestToonHoogte = latestNote.toonHoogte.ToUpper();
+
             }
+
+            else
+
+            {
+
+                latestToonHoogte = "C";
+
+            }
+
+
+
+            string nieuwToonHoogte = note.Substring(0, 1).ToUpper();
+
+            List<string> toonHoogtes = new List<string> { "A", "B", "C", "D", "E", "F", "G" };
+
+
+
+            if (!toonHoogtes.Contains(nieuwToonHoogte) || !toonHoogtes.Contains(latestToonHoogte))
+            {
+
+                return nieuwOctaaf;
+
+            }
+
+
+
+            int rechtsOm = toonHoogtes.IndexOf(latestToonHoogte);
+
+            bool rechtsWrap = false;
+
+            int linksOm = toonHoogtes.IndexOf(latestToonHoogte);
+
+            bool linksWrap = false;
+
+
+
+            while (toonHoogtes[rechtsOm] != nieuwToonHoogte)
+
+            {
+
+                if (toonHoogtes[rechtsOm] == "G")
+
+                {
+
+                    rechtsOm = 0;
+
+                    rechtsWrap = true;
+
+                }
+
+                else
+
+                {
+
+                    rechtsOm++;
+
+                }
+
+            }
+
+
+
+            while (toonHoogtes[linksOm] != nieuwToonHoogte)
+
+            {
+
+                if (toonHoogtes[linksOm] == "A")
+
+                {
+
+                    linksOm = toonHoogtes.Count - 1;
+
+                    linksWrap = true;
+
+                }
+
+                else
+
+                {
+
+                    linksOm--;
+
+                }
+
+            }
+
+
+
+            if (rechtsOm < linksOm)
+
+            {
+
+                if (rechtsWrap)
+
+                {
+
+                    if (nieuwOctaaf <= 10)
+
+                    {
+
+                        nieuwOctaaf++;
+
+                    }
+
+                }
+
+            }
+
+            else if (linksOm < rechtsOm)
+
+            {
+
+                if (linksWrap)
+
+                {
+
+                    if (nieuwOctaaf >= 0)
+
+                    {
+
+                        nieuwOctaaf--;
+
+                    }
+
+                }
+
+            }
+
+
 
             // handel de comma/apostrophe af
+
             if (note.Contains(","))
+
             {
-                if (nieuwOctaaf >= 1)
+
+                if (nieuwOctaaf >= 0)
+
                 {
-                    nieuwOctaaf = nieuwOctaaf - 1;
+
+                    nieuwOctaaf--;
+
                 }
+
             }
+
             else if (note.Contains("'"))
+
             {
-                if (nieuwOctaaf < 8)
+
+                if (nieuwOctaaf <= 10)
+
                 {
-                    nieuwOctaaf = nieuwOctaaf + 1;
+
+                    nieuwOctaaf++;
+
                 }
+
             }
+
+
 
             return nieuwOctaaf;
+
         }
 
+
+
         public TrackObject getTrackObject()
+
         {
+
             return trackObjectBuilder.tracks[0];
+
         }
+
     }
+
 }
