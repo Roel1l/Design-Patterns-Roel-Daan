@@ -37,7 +37,7 @@
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
-        <TextBox x:Name="textBox" TextChanged="textBox_textChanged" HorizontalAlignment="Left" Height="227" Margin="10,59,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="497"/>
+        <TextBox x:Name="textBox" TextChanged="textBox_textChanged" HorizontalAlignment="Left" Height="227" Margin="10,59,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="497"/>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="100" Margin="10,308,0,0" VerticalAlignment="Top" Width="497">
             <PSAMWPFControl:IncipitViewerWPF HorizontalAlignment="Left" Width="500" x:Name="staff" Height="57" />
         </ScrollViewer>

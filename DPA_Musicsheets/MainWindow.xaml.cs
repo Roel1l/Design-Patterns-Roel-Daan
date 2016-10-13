@@ -33,6 +33,7 @@ namespace DPA_Musicsheets
         private DateTime _now;
         private Timer _timer = new Timer();
         private bool _typed = false;
+        private string initialLilypond = string.Empty;
 
         // De OutputDevice is een midi device of het midikanaal van je PC.
         // Hierop gaan we audio streamen.
@@ -100,7 +101,6 @@ namespace DPA_Musicsheets
                 _player.Dispose();
             }
             
-
             _player = new MidiPlayer(_outputDevice);
             _player.Play(txt_MidiFilePath.Text);
         }
@@ -189,6 +189,7 @@ namespace DPA_Musicsheets
             }
             else if(extension == "ly")
             {
+                initialLilypond = File.ReadAllText(txt_MidiFilePath.Text);
                 textBox.Visibility = Visibility.Visible;
                 tabCtrl_MidiContent.Visibility = Visibility.Hidden;
                 textBox.Text = File.ReadAllText(txt_MidiFilePath.Text);
@@ -210,12 +211,37 @@ namespace DPA_Musicsheets
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _outputDevice.Close();
-            if (_player != null)
+            if (initialLilypond != textBox.Text)
             {
-                _player.Dispose();
+                switch (MessageBox.Show("Do you want to save before quitting?", "Question", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+                {
+                    case MessageBoxResult.Yes:
+                        System.Windows.Forms.SaveFileDialog s = new System.Windows.Forms.SaveFileDialog();
+                        s.FileName = "sheetmusic1.ly";
+                        s.Filter = "Lilypond files (*.ly)|*.ly|All files (*.*)|*.*";
+                        if (s.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            File.WriteAllText(s.FileName, textBox.Text);
+                            initialLilypond = textBox.Text;
+                        }                                             
+                        e.Cancel = true;
+                        break;
+                    case MessageBoxResult.No:
+                        _outputDevice.Close();
+                        if (_player != null) _player.Dispose();
+                        if (_timer != null) _timer.Dispose();
+                        break;
+                    case MessageBoxResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                }
             }
-            if (_timer != null) _timer.Dispose();
+            else
+            {
+                _outputDevice.Close();
+                if (_player != null) _player.Dispose();
+                if (_timer != null) _timer.Dispose();
+            }
         }
     }
 }
