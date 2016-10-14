@@ -72,9 +72,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ChainOfResponsability.cs" />
     <Compile Include="LyToObject.cs" />
     <Compile Include="MidiToObject.cs" />
     <Compile Include="MidiTrack.cs" />
+    <Compile Include="SaveHandler.cs" />
+    <Compile Include="TextHandler.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
