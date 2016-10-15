@@ -12,11 +12,19 @@ namespace DPA_Musicsheets
             SaveHandler _saveHandler = new SaveHandler();
             TextHandler _textHandler = new TextHandler();
 
-            if (keys.Contains(System.Windows.Input.Key.LeftCtrl)) {
-                _saveHandler.Handle(keys, window);
+            if (keys.Contains(System.Windows.Input.Key.LeftCtrl) && keys.Contains(System.Windows.Input.Key.LeftAlt)) {
+                // als zowel ctrl als alt zijn ingedrukt mag er niets gebeuren
+                return true;
+            }
+            else if (keys.Contains(System.Windows.Input.Key.LeftCtrl))
+            {
+                return _saveHandler.Handle(keys, window);
+            }
+            else if (keys.Contains(System.Windows.Input.Key.LeftAlt)) {
+                return _textHandler.Handle(keys, window);
             }
 
-            return false;
+            return true;
         }
     }
 }

@@ -249,17 +249,19 @@ namespace DPA_Musicsheets
 
         private void textBox_KeyDown(object sender, KeyEventArgs e)
         {
-            _keysDown.Add(e.Key);
-            if (_actionChain.Handle(_keysDown, this)) {
+            System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
+            _keysDown.Add(key);
+            if (_actionChain.Handle(_keysDown, this))
+            {
                 e.Handled = true;
                 _keysDown.Clear();
-
             }
         }
 
         private void textBox_KeyUp(object sender, KeyEventArgs e)
         {
-            _keysDown.Remove(e.Key);
+            System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
+            _keysDown.Remove(key);
         }
     }
 }
