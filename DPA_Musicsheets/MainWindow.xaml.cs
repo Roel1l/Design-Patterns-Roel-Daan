@@ -252,9 +252,9 @@ namespace DPA_Musicsheets
             System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
             _keysDown.Add(key);
             if (_actionChain.Handle(_keysDown, this))
-            {
-                e.Handled = true;
+            {               
                 _keysDown.Clear();
+               // e.Handled = true;
             }
         }
 
