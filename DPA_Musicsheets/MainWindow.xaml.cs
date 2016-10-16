@@ -263,5 +263,41 @@ namespace DPA_Musicsheets
             System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
             _keysDown.Remove(key);
         }
+
+        internal LyToObject LyToObject
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
+        }
+
+        internal MidiToObject MidiToObject
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
+        }
+
+        internal ChainOfResponsability ChainOfResponsability
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
+        }
     }
 }

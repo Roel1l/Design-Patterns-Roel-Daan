@@ -12,6 +12,18 @@ namespace DPA_Musicsheets.MusicObjects
     {
         public List<TrackObject> tracks = new List<TrackObject>();
 
+        internal TrackObject TrackObject
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
+        }
+
         public void buildMidiToObjectTrack(List<int[]> timeSignature, List<int> ticksperBeat, List<Tuple<ChannelMessage, MidiEvent>> notes)
         {
             TrackObject track = new TrackObject();

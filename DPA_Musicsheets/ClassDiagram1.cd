@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DPA_Musicsheets.ChainOfResponsability" Collapsed="true">
+    <Position X="4" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>CoR\ChainOfResponsability.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.SaveHandler" Collapsed="true">
+    <Position X="2.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAEIAAAAAAQAAAAA=</HashCode>
+      <FileName>CoR\SaveHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.TextHandler" Collapsed="true">
+    <Position X="5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAQAAAAAIAAQAAAAAAAAAgIAAAAAAAAAABA=</HashCode>
+      <FileName>CoR\TextHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.LyToObject" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAkIAAAAAAAQCAgAAAAACAAQAIBAEAAAAAAAA=</HashCode>
+      <FileName>LyToObject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TrackObjectBuilder" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DPA_Musicsheets.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAIAEQACAxAAQAUBQACAAAABEBABAgQACAAAQAABA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="LyToObject" />
+      <Property Name="MidiToObject" />
+      <Property Name="ChainOfResponsability" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DPA_Musicsheets.MidiPlayer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAACABAgAAIAAAAAAAAAAAIAAAgAAAAAAEAAA=</HashCode>
+      <FileName>MidiPlayer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DPA_Musicsheets.MidiReader" Collapsed="true">
+    <Position X="7" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAgAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>MidiReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.MidiToObject" Collapsed="true">
+    <Position X="2.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAA=</HashCode>
+      <FileName>MidiToObject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TrackObjectBuilder" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DPA_Musicsheets.MidiTrack" Collapsed="true">
+    <Position X="8.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>MidiTrack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.NoteObject" Collapsed="true">
+    <Position X="11.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MusicObjects\Symbols\NoteObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.MusicObjects.Symbols.MaatStreepObject" Collapsed="true">
+    <Position X="5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MusicObjects\Symbols\MaatStreepObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.MusicObjects.Symbols.TimeSignatureObject" Collapsed="true">
+    <Position X="7.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>MusicObjects\Symbols\TimeSignatureObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.MusicObjects.RestObject" Collapsed="true">
+    <Position X="9.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MusicObjects\Symbols\RestObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.MusicObjects.Symbol" Collapsed="true">
+    <Position X="8.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAgAAABAAAAAAEAEQEAggAAQAAQAAAAAAAAACAAAA=</HashCode>
+      <FileName>MusicObjects\Symbols\Symbol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DPA_Musicsheets.MusicObjects.TrackObject" Collapsed="true">
+    <Position X="5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAABAAAAAAAAAAAQAAAgAAAAAAAAACAQAAAAEKAA=</HashCode>
+      <FileName>MusicObjects\TrackObject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Symbol" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DPA_Musicsheets.MusicObjects.TrackObjectBuilder" Collapsed="true">
+    <Position X="2" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAABAAAAAAIAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MusicObjects\TrackObjectBuilder.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TrackObject" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DPA_Musicsheets.Properties.Resources" Collapsed="true">
+    <Position X="7" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
