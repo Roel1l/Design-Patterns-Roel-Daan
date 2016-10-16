@@ -1,7 +1,7 @@
 ﻿DPA_Musicsheets
 
 
-exe
+winexe
 C#
 .cs
 C:\Users\Rel\Documents\GitHub\Design-Patterns-Roel-Daan\DPA_Musicsheets\obj\Debug\
@@ -12,9 +12,9 @@ DEBUG;TRACE
 C:\Users\Rel\Documents\GitHub\Design-Patterns-Roel-Daan\DPA_Musicsheets\App.xaml
 11151548125
 
-21242652303
+24-706097442
 18851199252
 MainWindow.xaml;
 
-False
+True
 

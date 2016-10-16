@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{78BC0C32-8B72-44D2-BA4D-20E3A0A046D4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DPA_Musicsheets</RootNamespace>
     <AssemblyName>DPA_Musicsheets</AssemblyName>
@@ -72,9 +72,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CoR\ChainOfResponsability.cs" />
     <Compile Include="LyToObject.cs" />
     <Compile Include="MidiToObject.cs" />
     <Compile Include="MidiTrack.cs" />
+    <Compile Include="CoR\SaveHandler.cs" />
+    <Compile Include="CoR\TextHandler.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
