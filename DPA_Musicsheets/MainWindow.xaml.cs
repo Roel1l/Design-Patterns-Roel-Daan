@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DPA_Musicsheets.CoR;
 
 namespace DPA_Musicsheets
 {
@@ -30,7 +31,7 @@ namespace DPA_Musicsheets
         private MidiPlayer _player;
         public ObservableCollection<MidiTrack> MidiTracks { get; private set; }
         private List<System.Windows.Input.Key> _keysDown = new List<System.Windows.Input.Key>();
-        private ChainOfResponsability _actionChain = new ChainOfResponsability();
+        private ChainHandler _chainHandler = new ChainHandler();
 
         private DateTime _now;
         private Timer _timer = new Timer();
@@ -50,6 +51,19 @@ namespace DPA_Musicsheets
             FillPSAMViewer();
             textBox.Visibility = Visibility.Hidden;
             timer();
+
+            // ChainOfResponsability Handlers
+            _chainHandler.AddLastHandler(new OpenFileHandler());
+            _chainHandler.AddLastHandler(new SaveAsLyHandler());
+            _chainHandler.AddLastHandler(new SaveAsPDFHandler());
+
+            _chainHandler.AddLastHandler(new InsertTimeFourFourHandler());
+            _chainHandler.AddLastHandler(new InsertTimeThreeFourHandler());
+            _chainHandler.AddLastHandler(new InsertTimeSixEightHandler());
+            _chainHandler.AddLastHandler(new InsertClefTrebleHandler());
+            _chainHandler.AddLastHandler(new MissingBarlinesHandler());
+            _chainHandler.AddLastHandler(new TempoHandler());
+
             //notenbalk.LoadFromXmlFile("Resources/example.xml");
         }
 
@@ -251,7 +265,7 @@ namespace DPA_Musicsheets
         {
             System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
             _keysDown.Add(key);
-            if (_actionChain.Handle(_keysDown, this))
+            if (_chainHandler.IncomingCommand(_keysDown, this))
             {               
                 _keysDown.Clear();
                // e.Handled = true;
