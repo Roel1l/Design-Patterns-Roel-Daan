@@ -14,6 +14,18 @@ namespace DPA_Musicsheets.MusicObjects
         public List<Symbol> notes { get; set; }
         public int currTimeSignature { get; set; }
 
+        internal Symbol Symbol
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
+        }
+
         public TrackObject()
         {
             notes = new List<Symbol>();

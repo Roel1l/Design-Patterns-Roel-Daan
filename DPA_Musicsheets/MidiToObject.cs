@@ -66,6 +66,18 @@ namespace DPA_Musicsheets
             //Je slaat nu beide timesignatures met hun tpb op. Hoe weet je wanneer de volgende timesignature ingaat?
         }
 
+        internal TrackObjectBuilder TrackObjectBuilder
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
+        }
+
         public TrackObject getTrackObject()
         {
             return trackBuilder.tracks[0];

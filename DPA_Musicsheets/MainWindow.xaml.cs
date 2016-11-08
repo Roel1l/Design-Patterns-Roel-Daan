@@ -29,6 +29,8 @@ namespace DPA_Musicsheets
     {
         private MidiPlayer _player;
         public ObservableCollection<MidiTrack> MidiTracks { get; private set; }
+        private List<System.Windows.Input.Key> _keysDown = new List<System.Windows.Input.Key>();
+        private ChainOfResponsability _actionChain = new ChainOfResponsability();
 
         private DateTime _now;
         private Timer _timer = new Timer();
@@ -96,11 +98,11 @@ namespace DPA_Musicsheets
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
-            if(_player != null)
+            if (_player != null)
             {
                 _player.Dispose();
             }
-            
+
             _player = new MidiPlayer(_outputDevice);
             _player.Play(txt_MidiFilePath.Text);
         }
@@ -111,7 +113,7 @@ namespace DPA_Musicsheets
             if (openFileDialog.ShowDialog() == true)
             {
                 txt_MidiFilePath.Text = openFileDialog.FileName;
-            }            
+            }
         }
 
         private void textBox_textChanged(object sender, RoutedEventArgs e)
@@ -135,12 +137,13 @@ namespace DPA_Musicsheets
                 Console.WriteLine("Update!");
                 _typed = false;
 
-                Application.Current.Dispatcher.Invoke(new Action(() => {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
                     LyToObject lyToObject = new LyToObject(textBox.Text);
                     drawTrack(lyToObject.getTrackObject());
                 }));
 
-            }     
+            }
         }
 
         private void drawTrack(TrackObject track)
@@ -187,7 +190,7 @@ namespace DPA_Musicsheets
                 textBox.Visibility = Visibility.Hidden;
                 tabCtrl_MidiContent.Visibility = Visibility.Visible;
             }
-            else if(extension == "ly")
+            else if (extension == "ly")
             {
                 initialLilypond = File.ReadAllText(txt_MidiFilePath.Text);
                 textBox.Visibility = Visibility.Visible;
@@ -195,7 +198,7 @@ namespace DPA_Musicsheets
                 textBox.Text = File.ReadAllText(txt_MidiFilePath.Text);
                 LyToObject lyToObject = new LyToObject(textBox.Text);
                 drawTrack(lyToObject.getTrackObject());
-            }          
+            }
         }
 
         private void ShowMidiTracks(IEnumerable<MidiTrack> midiTracks)
@@ -223,7 +226,7 @@ namespace DPA_Musicsheets
                         {
                             File.WriteAllText(s.FileName, textBox.Text);
                             initialLilypond = textBox.Text;
-                        }                                             
+                        }
                         e.Cancel = true;
                         break;
                     case MessageBoxResult.No:
@@ -241,6 +244,59 @@ namespace DPA_Musicsheets
                 _outputDevice.Close();
                 if (_player != null) _player.Dispose();
                 if (_timer != null) _timer.Dispose();
+            }
+        }
+
+        private void textBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
+            _keysDown.Add(key);
+            if (_actionChain.Handle(_keysDown, this))
+            {               
+                _keysDown.Clear();
+               // e.Handled = true;
+            }
+        }
+
+        private void textBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
+            _keysDown.Remove(key);
+        }
+
+        internal LyToObject LyToObject
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
+        }
+
+        internal MidiToObject MidiToObject
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+            }
+        }
+
+        internal ChainOfResponsability ChainOfResponsability
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
             }
         }
     }

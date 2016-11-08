@@ -56,7 +56,17 @@ namespace DPA_Musicsheets
             trackObjectBuilder.buildLyToObjectTrack(maatSoort, readContent());
         }
 
+        internal TrackObjectBuilder TrackObjectBuilder
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
 
+            set
+            {
+            }
+        }
 
         private List<Symbol> readContent()
         {
