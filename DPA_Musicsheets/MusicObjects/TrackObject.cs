@@ -11,43 +11,29 @@ namespace DPA_Musicsheets.MusicObjects
     {
         public List<int[]> timeSignature { get; set; }
         public List<int> ticksPerBeat { get; set; }
-        public List<Symbol> notes { get; set; }
+        public List<ISymbol> notes { get; set; }
         public int currTimeSignature { get; set; }
-
-        internal Symbol Symbol
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
 
         public TrackObject()
         {
-            notes = new List<Symbol>();
+            notes = new List<ISymbol>();
         }
 
         public void addMidiNote(ChannelMessage message, MidiEvent midiEvent)
         {
-            Symbol note;
-
             if (message.Data2 == 90 && midiEvent.DeltaTicks > 0) //Rust
             {
-                note = new RestObject();
-                note.absoluteTicks = midiEvent.AbsoluteTicks;
-                note.octaaf = message.Data1 / 12;
-                note.setToonhoogte(message.Data1 % 12);
-                notes.Add(note);
+                RestObject rest = new RestObject();
+                rest.absoluteTicks = midiEvent.AbsoluteTicks;
+                rest.octaaf = message.Data1 / 12;
+                rest.setToonhoogte(message.Data1 % 12);
+                notes.Add(rest);
 
                 calculateNoteLength(midiEvent);
             }
             if (message.Data2 == 90) //Noot
             {
-                note = new NoteObject();
+                NoteObject note = new NoteObject();
                 note.absoluteTicks = midiEvent.AbsoluteTicks;
                 note.octaaf = message.Data1 / 12;
                 note.setToonhoogte(message.Data1 % 12);
@@ -61,38 +47,71 @@ namespace DPA_Musicsheets.MusicObjects
             }
         }
 
-        public void addLyNote(Symbol note)
+        public void addLyNote(ISymbol note)
         {
             notes.Add(note);
         }
 
-        public void addSymbol(Symbol symbol)
+        public void addSymbol(ISymbol symbol)
         {
             notes.Add(symbol);
         }
 
         private void calculateNoteLength(MidiEvent midiEvent)
         {
-            notes[notes.Count - 1].nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[currTimeSignature];
-            double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * notes[notes.Count - 1].nootduur;
-
-            for (int noteLength = 32; noteLength >= 1; noteLength /= 2)
+            if (notes[notes.Count - 1] is NoteObject)
             {
-                double absoluteNoteLength = (1.0 / noteLength);
+                NoteObject note = (NoteObject)notes[notes.Count - 1];
 
-                if (percentageOfWholeNote <= absoluteNoteLength)
+                note.nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[currTimeSignature];
+                double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * note.nootduur;
+
+                for (int noteLength = 32; noteLength >= 1; noteLength /= 2)
                 {
-                    notes[notes.Count - 1].lengte = noteLength;
-                    return;
+                    double absoluteNoteLength = (1.0 / noteLength);
+
+                    if (percentageOfWholeNote <= absoluteNoteLength)
+                    {
+                        note.lengte = noteLength;
+                        notes[notes.Count - 1] = note;
+                        return;
+                    }
+                    if (percentageOfWholeNote == 1.5 * absoluteNoteLength)
+                    {
+                        note.lengte = noteLength;
+                        note.punt = 1;
+                        notes[notes.Count - 1] = note;
+                        return;
+                    }
                 }
-                if (percentageOfWholeNote == 1.5 * absoluteNoteLength)
+            }
+            else if (notes[notes.Count - 1] is RestObject)
+            {
+                RestObject note = (RestObject)notes[notes.Count - 1];
+
+                note.nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[currTimeSignature];
+                double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * note.nootduur;
+
+                for (int noteLength = 32; noteLength >= 1; noteLength /= 2)
                 {
-                    notes[notes.Count - 1].lengte = noteLength;
-                    notes[notes.Count - 1].punt = 1;
-                    return;
+                    double absoluteNoteLength = (1.0 / noteLength);
+
+                    if (percentageOfWholeNote <= absoluteNoteLength)
+                    {
+                        note.lengte = noteLength;
+                        notes[notes.Count - 1] = note;
+                        return;
+                    }
+                    if (percentageOfWholeNote == 1.5 * absoluteNoteLength)
+                    {
+                        note.lengte = noteLength;
+                        note.punt = 1;
+                        notes[notes.Count - 1] = note;
+                        return;
+                    }
                 }
             }
         }
-      
+
     }
 }

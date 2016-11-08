@@ -156,16 +156,16 @@ namespace DPA_Musicsheets
 
             if (track.notes.Count > 2)
             {
-                foreach (Symbol symbol in track.notes)
+                foreach (ISymbol symbol in track.notes)
                 {
-                    int a = symbol.absoluteTicks >= 16128 && track.timeSignature.Count > 1 ? 1 : 0;
+                    int a = 0;//symbol.absoluteTicks >= 16128 && track.timeSignature.Count > 1 ? 1 : 0;
                     if (maatvol >= track.timeSignature[a][1])
                     {
                         staff.AddMusicalSymbol(new Barline());
                         maatvol = 0;
                     }
 
-                    maatvol += symbol.nootduur;
+                    //maatvol += symbol.nootduur;
                     staff.AddMusicalSymbol(symbol.getSymbol());
                     staff.Width += 30;
                 }
@@ -262,42 +262,6 @@ namespace DPA_Musicsheets
         {
             System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
             _keysDown.Remove(key);
-        }
-
-        internal LyToObject LyToObject
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
-
-        internal MidiToObject MidiToObject
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
-
-        internal ChainOfResponsability ChainOfResponsability
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
         }
     }
 }

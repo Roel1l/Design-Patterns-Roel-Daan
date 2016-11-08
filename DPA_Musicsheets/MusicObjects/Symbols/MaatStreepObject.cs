@@ -7,9 +7,9 @@ using PSAMControlLibrary;
 
 namespace DPA_Musicsheets.MusicObjects.Symbols
 {
-    class MaatStreepObject : Symbol
+    class MaatStreepObject : ISymbol
     {
-        public override MusicalSymbol getSymbol()
+        public MusicalSymbol getSymbol()
         {
             return new Barline();
         }
