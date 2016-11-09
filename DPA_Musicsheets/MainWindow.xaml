@@ -38,8 +38,8 @@
             </TabControl.ContentTemplate>
         </TabControl>
         <TextBox x:Name="textBox" AcceptsReturn="True"  TextChanged="textBox_textChanged" KeyDown="textBox_KeyDown" KeyUp="textBox_KeyUp" HorizontalAlignment="Left" Height="227" Margin="10,59,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="497"/>
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="100" Margin="10,308,0,0" VerticalAlignment="Top" Width="497">
-            <PSAMWPFControl:IncipitViewerWPF HorizontalAlignment="Left" Width="500" x:Name="staff" Height="57" />
+        <ScrollViewer Name="scrollViewer" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="100" Margin="10,308,0,0" VerticalAlignment="Top" Width="497">
+           
         </ScrollViewer>
         
     </Grid>

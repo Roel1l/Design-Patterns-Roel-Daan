@@ -140,7 +140,8 @@ namespace DPA_Musicsheets
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     LyToObject lyToObject = new LyToObject(textBox.Text);
-                    staff = new Wrapper().createStaff(staff, lyToObject.getTrackObject());
+                    IWrapper wrapper = new Wrapper();
+                    wrapper.draw(scrollViewer, lyToObject.getTrackObject());
                 }));
 
             }
@@ -160,7 +161,8 @@ namespace DPA_Musicsheets
             {
                 ShowMidiTracks(MidiReader.ReadMidi(txt_MidiFilePath.Text));
                 MidiToObject midiToObject = new MidiToObject(txt_MidiFilePath.Text);
-                staff = new Wrapper().createStaff(staff, midiToObject.getTrackObject());
+                IWrapper wrapper = new Wrapper();
+                wrapper.draw(scrollViewer, midiToObject.getTrackObject());
                 textBox.Visibility = Visibility.Hidden;
                 tabCtrl_MidiContent.Visibility = Visibility.Visible;
             }
@@ -171,7 +173,8 @@ namespace DPA_Musicsheets
                 tabCtrl_MidiContent.Visibility = Visibility.Hidden;
                 textBox.Text = File.ReadAllText(txt_MidiFilePath.Text);
                 LyToObject lyToObject = new LyToObject(textBox.Text);
-                staff = new Wrapper().createStaff(staff, lyToObject.getTrackObject());
+                IWrapper wrapper = new Wrapper();
+                wrapper.draw(scrollViewer, lyToObject.getTrackObject());
             }
         }
 

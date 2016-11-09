@@ -7,14 +7,30 @@ using DPA_Musicsheets.MusicObjects;
 using PSAMControlLibrary;
 using PSAMWPFControlLibrary;
 using DPA_Musicsheets.MusicObjects.Symbols;
+using System.Windows.Controls;
 
 namespace DPA_Musicsheets
 {
-    class Wrapper
+    interface IWrapper
     {
-        public IncipitViewerWPF createStaff(IncipitViewerWPF staff, TrackObject track)
+        void draw(ScrollViewer scrollViewer, TrackObject track);
+    }
+    class Wrapper : IWrapper
+    {
+        private IncipitViewerWPF staff;
+
+        private void createStaff()
         {
-             staff.ClearMusicalIncipit();
+            staff = new IncipitViewerWPF();
+            staff.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+            staff.Width = 500;
+            staff.Height = 57;
+        }
+        public void draw(ScrollViewer scrollViewer, TrackObject track)
+        {
+            createStaff();  
+
+            staff.ClearMusicalIncipit();
             staff.Width = 500;
             staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
 
@@ -42,7 +58,8 @@ namespace DPA_Musicsheets
                     staff.Width += 30;
                 }
             }
-            return staff;
+
+            scrollViewer.Content = staff;
         }
 
         private MusicalSymbol getSymbol(ISymbol symbol)
