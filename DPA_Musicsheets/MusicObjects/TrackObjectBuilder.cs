@@ -26,13 +26,13 @@ namespace DPA_Musicsheets.MusicObjects
             {
                 if (c.Item2.AbsoluteTicks >= 16128 && !addedSecondTimeSignature)
                 {
-                    track.addSymbol(new TimeSignatureObject() { timeSignature = new int[] { timeSignature[1][0], timeSignature[1][1] } });
+                    track.addSymbol(new TimeSignatureSymbol() { timeSignature = new int[] { timeSignature[1][0], timeSignature[1][1] } });
                     addedSecondTimeSignature = true;
                     track.currTimeSignature = 1;
                 }
                 else if(!addedFirstTimeSignature)
                 {
-                    track.addSymbol(new TimeSignatureObject() { timeSignature = new int[] { timeSignature[0][0], timeSignature[0][1] } });
+                    track.addSymbol(new TimeSignatureSymbol() { timeSignature = new int[] { timeSignature[0][0], timeSignature[0][1] } });
                     addedFirstTimeSignature = true;
                 }
                 track.addMidiNote(c.Item1, c.Item2);

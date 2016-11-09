@@ -78,6 +78,7 @@
     <Compile Include="MidiTrack.cs" />
     <Compile Include="CoR\SaveHandler.cs" />
     <Compile Include="CoR\TextHandler.cs" />
+    <Compile Include="StaffFacade.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,13 +95,13 @@
   <ItemGroup>
     <Compile Include="MidiPlayer.cs" />
     <Compile Include="MidiReader.cs" />
-    <Compile Include="MusicObjects\Symbols\MaatStreepObject.cs" />
-    <Compile Include="MusicObjects\Symbols\RestObject.cs" />
+    <Compile Include="MusicObjects\Symbols\MaatStreepSymbol.cs" />
+    <Compile Include="MusicObjects\Symbols\RestSymbol.cs" />
     <Compile Include="MusicObjects\Symbols\ISymbol.cs" />
-    <Compile Include="MusicObjects\Symbols\TimeSignatureObject.cs" />
+    <Compile Include="MusicObjects\Symbols\TimeSignatureSymbol.cs" />
     <Compile Include="MusicObjects\TrackObjectBuilder.cs" />
     <Compile Include="MusicObjects\TrackObject.cs" />
-    <Compile Include="MusicObjects\Symbols\NoteObject.cs" />
+    <Compile Include="MusicObjects\Symbols\NoteSymbol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

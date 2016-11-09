@@ -1,14 +1,12 @@
 ﻿using DPA_Musicsheets.MusicObjects;
-using PSAMControlLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DPA_Musicsheets
 {
-    class NoteObject : ISymbol
+    class NoteSymbol : ISymbol
     {
         private List<string> toonHoogtes;
         public int kruisMol { get; set; } // '1' is kruis, '-1' is mol
@@ -27,7 +25,7 @@ namespace DPA_Musicsheets
 
         public bool isMaatStreep { get; set; }
 
-        public NoteObject()
+        public NoteSymbol()
         {
             toonHoogtes = new List<string>();
             toonHoogtes.Add("C");
@@ -48,30 +46,6 @@ namespace DPA_Musicsheets
         {
             this.toonHoogte = toonHoogtes[keyCode];
             if (this.toonHoogte.Contains("#")) this.kruisMol = 1;
-        }
-
-        public MusicalSymbolDuration noteLengthToMusicalSymbolDuration(int length)
-        {
-            switch (length)
-            {
-                case 1:
-                    return MusicalSymbolDuration.Whole;
-                case 2:
-                    return MusicalSymbolDuration.Half;
-                case 4:
-                    return MusicalSymbolDuration.Quarter;
-                case 8:
-                    return MusicalSymbolDuration.Eighth;
-                case 16:
-                    return MusicalSymbolDuration.Sixteenth;
-                default:
-                    return MusicalSymbolDuration.Unknown;
-            }
-        }
-
-        public MusicalSymbol getSymbol()
-        {
-            return new Note(this.toonHoogte, this.kruisMol, this.octaaf - 1, noteLengthToMusicalSymbolDuration((int)this.lengte), NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single }) { NumberOfDots = this.punt };
         }
     }
 }

@@ -140,35 +140,9 @@ namespace DPA_Musicsheets
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     LyToObject lyToObject = new LyToObject(textBox.Text);
-                    drawTrack(lyToObject.getTrackObject());
+                    staff = new Wrapper().createStaff(staff, lyToObject.getTrackObject());
                 }));
 
-            }
-        }
-
-        private void drawTrack(TrackObject track)
-        {
-            staff.ClearMusicalIncipit();
-            staff.Width = 500;
-            staff.AddMusicalSymbol(new Clef(ClefType.GClef, 2));
-
-            double maatvol = 0;
-
-            if (track.notes.Count > 2)
-            {
-                foreach (ISymbol symbol in track.notes)
-                {
-                    int a = 0;//symbol.absoluteTicks >= 16128 && track.timeSignature.Count > 1 ? 1 : 0;
-                    if (maatvol >= track.timeSignature[a][1])
-                    {
-                        staff.AddMusicalSymbol(new Barline());
-                        maatvol = 0;
-                    }
-
-                    //maatvol += symbol.nootduur;
-                    staff.AddMusicalSymbol(symbol.getSymbol());
-                    staff.Width += 30;
-                }
             }
         }
 
@@ -186,7 +160,7 @@ namespace DPA_Musicsheets
             {
                 ShowMidiTracks(MidiReader.ReadMidi(txt_MidiFilePath.Text));
                 MidiToObject midiToObject = new MidiToObject(txt_MidiFilePath.Text);
-                drawTrack(midiToObject.getTrackObject());
+                staff = new Wrapper().createStaff(staff, midiToObject.getTrackObject());
                 textBox.Visibility = Visibility.Hidden;
                 tabCtrl_MidiContent.Visibility = Visibility.Visible;
             }
@@ -197,7 +171,7 @@ namespace DPA_Musicsheets
                 tabCtrl_MidiContent.Visibility = Visibility.Hidden;
                 textBox.Text = File.ReadAllText(txt_MidiFilePath.Text);
                 LyToObject lyToObject = new LyToObject(textBox.Text);
-                drawTrack(lyToObject.getTrackObject());
+                staff = new Wrapper().createStaff(staff, lyToObject.getTrackObject());
             }
         }
 

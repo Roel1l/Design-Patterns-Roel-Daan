@@ -1,5 +1,4 @@
-﻿using PSAMControlLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DPA_Musicsheets.MusicObjects
 {
-    class RestObject : ISymbol
+    class RestSymbol : ISymbol
     {
         private List<string> toonHoogtes;
         public int kruisMol { get; set; } // '1' is kruis, '-1' is mol
@@ -26,7 +25,7 @@ namespace DPA_Musicsheets.MusicObjects
 
         public bool isMaatStreep { get; set; }
 
-        public RestObject()
+        public RestSymbol()
         {
             toonHoogtes = new List<string>();
             toonHoogtes.Add("C");
@@ -47,30 +46,6 @@ namespace DPA_Musicsheets.MusicObjects
         {
             this.toonHoogte = toonHoogtes[keyCode];
             if (this.toonHoogte.Contains("#")) this.kruisMol = 1;
-        }
-
-        public MusicalSymbol getSymbol()
-        {
-            return new Rest(noteLengthToMusicalSymbolDuration((int)this.lengte)) { NumberOfDots = this.punt };
-        }
-
-        public MusicalSymbolDuration noteLengthToMusicalSymbolDuration(int length)
-        {
-            switch (length)
-            {
-                case 1:
-                    return MusicalSymbolDuration.Whole;
-                case 2:
-                    return MusicalSymbolDuration.Half;
-                case 4:
-                    return MusicalSymbolDuration.Quarter;
-                case 8:
-                    return MusicalSymbolDuration.Eighth;
-                case 16:
-                    return MusicalSymbolDuration.Sixteenth;
-                default:
-                    return MusicalSymbolDuration.Unknown;
-            }
         }
     }
 }

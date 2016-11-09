@@ -9,6 +9,5 @@ namespace DPA_Musicsheets.MusicObjects
 {
     interface ISymbol
     {   
-        MusicalSymbol getSymbol();
     }
 }

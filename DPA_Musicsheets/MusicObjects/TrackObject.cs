@@ -23,7 +23,7 @@ namespace DPA_Musicsheets.MusicObjects
         {
             if (message.Data2 == 90 && midiEvent.DeltaTicks > 0) //Rust
             {
-                RestObject rest = new RestObject();
+                RestSymbol rest = new RestSymbol();
                 rest.absoluteTicks = midiEvent.AbsoluteTicks;
                 rest.octaaf = message.Data1 / 12;
                 rest.setToonhoogte(message.Data1 % 12);
@@ -33,7 +33,7 @@ namespace DPA_Musicsheets.MusicObjects
             }
             if (message.Data2 == 90) //Noot
             {
-                NoteObject note = new NoteObject();
+                NoteSymbol note = new NoteSymbol();
                 note.absoluteTicks = midiEvent.AbsoluteTicks;
                 note.octaaf = message.Data1 / 12;
                 note.setToonhoogte(message.Data1 % 12);
@@ -59,9 +59,9 @@ namespace DPA_Musicsheets.MusicObjects
 
         private void calculateNoteLength(MidiEvent midiEvent)
         {
-            if (notes[notes.Count - 1] is NoteObject)
+            if (notes[notes.Count - 1] is NoteSymbol)
             {
-                NoteObject note = (NoteObject)notes[notes.Count - 1];
+                NoteSymbol note = (NoteSymbol)notes[notes.Count - 1];
 
                 note.nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[currTimeSignature];
                 double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * note.nootduur;
@@ -85,9 +85,9 @@ namespace DPA_Musicsheets.MusicObjects
                     }
                 }
             }
-            else if (notes[notes.Count - 1] is RestObject)
+            else if (notes[notes.Count - 1] is RestSymbol)
             {
-                RestObject note = (RestObject)notes[notes.Count - 1];
+                RestSymbol note = (RestSymbol)notes[notes.Count - 1];
 
                 note.nootduur = (midiEvent.DeltaTicks) / (double)ticksPerBeat[currTimeSignature];
                 double percentageOfWholeNote = (1.0 / (double)timeSignature[0][1]) * note.nootduur;

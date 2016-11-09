@@ -137,14 +137,14 @@ namespace DPA_Musicsheets
 
         }
 
-        private TimeSignatureObject getProperMaatsoort(string maatsoort)
+        private TimeSignatureSymbol getProperMaatsoort(string maatsoort)
         {
             string s1 = maatsoort.Substring(0, maatsoort.IndexOf("/"));
             string s2 = maatsoort.Substring(maatsoort.IndexOf("/") + 1);
 
             int[] i = { Int32.Parse(s1), Int32.Parse(s2) };
             maatSoort.Add(i);
-            return new TimeSignatureObject() { timeSignature = i};
+            return new TimeSignatureSymbol() { timeSignature = i};
         }
 
         private ISymbol createNote(string note)
@@ -153,7 +153,7 @@ namespace DPA_Musicsheets
 
             if (toonhoogte == "r")
             {
-                RestObject newNote = new RestObject();
+                RestSymbol newNote = new RestSymbol();
                 newNote.octaaf = latestNoteOctaaf;
 
                 newNote.kruisMol = addKruisMol(note);
@@ -176,7 +176,7 @@ namespace DPA_Musicsheets
             }
             else
             {
-                NoteObject newNote = new NoteObject();
+                NoteSymbol newNote = new NoteSymbol();
                 newNote.toonHoogte = toonhoogte.ToUpper();
                 newNote.octaaf = setCurrentOctaaf(note);
                 newNote.kruisMol = addKruisMol(note);
@@ -204,7 +204,7 @@ namespace DPA_Musicsheets
 
         private ISymbol createMaatStreep()
         {
-            MaatStreepObject maatStreep = new MaatStreepObject();
+            MaatStreepSymbol maatStreep = new MaatStreepSymbol();
             return maatStreep;
         }
 
