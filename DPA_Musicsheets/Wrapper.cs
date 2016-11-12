@@ -45,16 +45,21 @@ namespace DPA_Musicsheets
                     {
                         NoteSymbol note = (NoteSymbol)symbol;
                         a = note.absoluteTicks >= 16128 && track.timeSignature.Count > 1 ? 1 : 0;
-                        if (maatvol >= track.timeSignature[a][1])
+                        if (track.timeSignature.Count > 0)
                         {
-                            staff.AddMusicalSymbol(new Barline());
-                            maatvol = 0;
+                            if (maatvol >= track.timeSignature[a][1])
+                            {
+                                staff.AddMusicalSymbol(new Barline());
+                                maatvol = 0;
+                            }
                         }
 
                         maatvol += note.nootduur;
                     }
 
-                    staff.AddMusicalSymbol(getSymbol(symbol));
+                    MusicalSymbol musicalSymbol = getSymbol(symbol);
+
+                    if(musicalSymbol != null) staff.AddMusicalSymbol(musicalSymbol);
                     staff.Width += 30;
                 }
             }
@@ -78,7 +83,11 @@ namespace DPA_Musicsheets
                 RestSymbol restObject = (RestSymbol)symbol;
                 return new Rest(noteLengthToMusicalSymbolDuration((int)restObject.lengte)) { NumberOfDots = restObject.punt };
             }
-            else 
+            else if(symbol is TempoSymbol)
+            {
+                return null;
+            }
+            else
             {
                 NoteSymbol noteObject = (NoteSymbol)symbol;
                 return new Note(noteObject.toonHoogte, noteObject.kruisMol, noteObject.octaaf - 1, noteLengthToMusicalSymbolDuration((int)noteObject.lengte), NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>() { NoteBeamType.Single }) { NumberOfDots = noteObject.punt };

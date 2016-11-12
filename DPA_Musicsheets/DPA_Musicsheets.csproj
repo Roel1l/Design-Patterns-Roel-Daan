@@ -78,6 +78,8 @@
     <Compile Include="MidiTrack.cs" />
     <Compile Include="CoR\SaveHandler.cs" />
     <Compile Include="CoR\TextHandler.cs" />
+    <Compile Include="MusicObjects\Symbols\TempoSymbol.cs" />
+    <Compile Include="ObjectToLy.cs" />
     <Compile Include="Wrapper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -32,6 +32,8 @@ namespace DPA_Musicsheets
 
         private List<int[]> maatSoort;
 
+        private int repeatTimes;
+
         private enum contentType
         {
             none,
@@ -43,11 +45,13 @@ namespace DPA_Musicsheets
         {
             // relative c = octaaf 5
             latestNoteOctaaf = 5;
+            content =content.Replace("\n", " ");
+            content = content.Replace("\r", " ");
+
             lilyPondContents = content.Split(' ').Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
             for (int i = 0; i < lilyPondContents.Length; i++)
             {
-                lilyPondContents[i] = lilyPondContents[i].Replace("\r\n", string.Empty);
                 lilyPondContents[i] = lilyPondContents[i].Replace(" ", string.Empty);
             }
 
@@ -61,8 +65,6 @@ namespace DPA_Musicsheets
         {
             int alternativeNr = 0;
 
-            string tempo = "error";
-            string maatsoort = "error";
             string sleutel = "error";
 
             contentType type = contentType.none;
@@ -75,12 +77,13 @@ namespace DPA_Musicsheets
                 switch (lilyPondContents[i])
                 {
                    case "\\tempo":
-                       tempo = lilyPondContents[i + 1];
+                        string[] sTempo = lilyPondContents[i + 1].Split('=');
+                        int[] iTempo = { Int32.Parse(sTempo[0]), Int32.Parse(sTempo[1]) };
+                        notes.Add(new TempoSymbol { tempo = iTempo });
                         i++;
                         break;
                     case "\\time":
-                        maatsoort = lilyPondContents[i + 1];
-                        notes.Add(getProperMaatsoort(maatsoort));
+                        notes.Add(getProperMaatsoort(lilyPondContents[i + 1]));
                         i++;
                         break;
                     case "\\repeat":                   
@@ -119,12 +122,18 @@ namespace DPA_Musicsheets
                         {
                             type = contentType.none;
                         }
-
+                        break;
+                    case "volta":
+                        try
+                        {
+                            repeatTimes = Int32.Parse(lilyPondContents[i + 1]);
+                        }
+                        catch { }
                         break;
 
                     default:
                         // gebruik deze voor de (cashew)noten
-                        if (lilyPondContents[i] != string.Empty)
+                        if (lilyPondContents[i] != string.Empty && Regex.IsMatch(lilyPondContents[i], @"[a-zA-Z]") && Regex.IsMatch(lilyPondContents[i], @"[0-9]"))
                         {
                             if (type == contentType.alternative) alternatives[alternativeNr].Add(createNote(lilyPondContents[i]));
                             else notes.Add(createNote(lilyPondContents[i]));
@@ -238,7 +247,6 @@ namespace DPA_Musicsheets
             {
                 latestToonHoogte = latestNoteToonhoogte.ToUpper();
             }
-
             else
             {
                 latestToonHoogte = "C";
@@ -308,21 +316,11 @@ namespace DPA_Musicsheets
 
             // handel de comma/apostrophe af
 
-            if (note.Contains(","))
-            {
-                if (nieuwOctaaf >= 0)
-                {
-                    nieuwOctaaf--;
-                }
-            }
+            int highcommas = note.Count(x => x == '\'');
+            nieuwOctaaf = nieuwOctaaf + highcommas;
 
-            else if (note.Contains("'"))
-            {
-                if (nieuwOctaaf <= 10)
-                {
-                    nieuwOctaaf++;
-                }
-            }
+            int commas = note.Count(x => x == ',');
+            nieuwOctaaf = nieuwOctaaf - commas;
 
             return nieuwOctaaf;
         }

@@ -171,8 +171,9 @@ namespace DPA_Musicsheets
                 initialLilypond = File.ReadAllText(txt_MidiFilePath.Text);
                 textBox.Visibility = Visibility.Visible;
                 tabCtrl_MidiContent.Visibility = Visibility.Hidden;
-                textBox.Text = File.ReadAllText(txt_MidiFilePath.Text);
-                LyToObject lyToObject = new LyToObject(textBox.Text);
+                LyToObject lyToObject = new LyToObject(initialLilypond);
+                initialLilypond = new ObjectToLy().convert(lyToObject.getTrackObject());
+                textBox.Text = initialLilypond;
                 IWrapper wrapper = new Wrapper();
                 wrapper.draw(scrollViewer, lyToObject.getTrackObject());
             }
