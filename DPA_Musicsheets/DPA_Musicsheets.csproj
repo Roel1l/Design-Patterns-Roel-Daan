@@ -73,6 +73,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CoR\ChainOfResponsability.cs" />
+    <Compile Include="CoR\ChainHandler.cs" />
+    <Compile Include="CoR\InsertClefTrebleHandler.cs" />
+    <Compile Include="CoR\InsertTimeFourFourHandler.cs" />
+    <Compile Include="CoR\InsertTimeSixEightHandler.cs" />
+    <Compile Include="CoR\InsertTimeThreeFourHandler.cs" />
+    <Compile Include="CoR\MainHandler.cs" />
+    <Compile Include="CoR\MissingBarlinesHandler.cs" />
+    <Compile Include="CoR\OpenFileHandler.cs" />
+    <Compile Include="CoR\SaveAsLyHandler.cs" />
+    <Compile Include="CoR\SaveAsPDFHandler.cs" />
+    <Compile Include="CoR\TempoHandler.cs" />
     <Compile Include="LyToObject.cs" />
     <Compile Include="MidiToObject.cs" />
     <Compile Include="MidiTrack.cs" />
