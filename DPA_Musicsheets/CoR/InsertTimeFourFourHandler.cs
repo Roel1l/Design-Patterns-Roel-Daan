@@ -14,8 +14,11 @@ namespace DPA_Musicsheets.CoR
         {
             if (keys.Contains(Key.LeftAlt) && keys.Contains(Key.T) || keys.Contains(Key.LeftAlt) && keys.Contains(Key.T) && keys.Contains(Key.D4))
             {
-                window.textBox.Text = window.textBox.Text.Insert(window.textBox.SelectionStart, @"\time 4/4");
-                return true;
+                if (!keys.Contains(Key.D6) && !keys.Contains(Key.D3))
+                {
+                    window.textBox.Text = window.textBox.Text.Insert(window.textBox.SelectionStart, @"\time 4/4");
+                    return true;
+                }
             }
 
             return false;

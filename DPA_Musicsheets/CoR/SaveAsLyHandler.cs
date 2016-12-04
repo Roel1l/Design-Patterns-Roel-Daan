@@ -12,7 +12,7 @@ namespace DPA_Musicsheets.CoR
     {
         protected override bool TryHandle(List<Key> keys, MainWindow window)
         {
-            if (keys.Contains(Key.LeftCtrl) && keys.Contains(Key.S))
+            if (keys.Contains(Key.LeftCtrl) && keys.Contains(Key.S) && !keys.Contains(Key.P))
             {
                 System.Windows.Forms.SaveFileDialog s = new System.Windows.Forms.SaveFileDialog();
 
