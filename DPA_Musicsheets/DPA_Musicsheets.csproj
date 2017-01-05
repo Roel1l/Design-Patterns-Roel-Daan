@@ -72,6 +72,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CoR\UndoHandler.cs" />
+    <Compile Include="Memento\Caretaker.cs" />
     <Compile Include="CoR\ChainOfResponsability.cs" />
     <Compile Include="CoR\ChainHandler.cs" />
     <Compile Include="CoR\InsertClefTrebleHandler.cs" />
@@ -85,6 +87,8 @@
     <Compile Include="CoR\SaveAsPDFHandler.cs" />
     <Compile Include="CoR\TempoHandler.cs" />
     <Compile Include="LyToObject.cs" />
+    <Compile Include="Memento\Memento.cs" />
+    <Compile Include="Memento\Originator.cs" />
     <Compile Include="MidiToObject.cs" />
     <Compile Include="MidiTrack.cs" />
     <Compile Include="MusicObjects\Symbols\TempoSymbol.cs" />

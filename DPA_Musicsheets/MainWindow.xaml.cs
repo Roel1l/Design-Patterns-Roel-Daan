@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DPA_Musicsheets.CoR;
+using DPA_Musicsheets.Memento;
 
 namespace DPA_Musicsheets
 {
@@ -37,6 +38,12 @@ namespace DPA_Musicsheets
         private Timer _timer = new Timer();
         private bool _typed = false;
         private string initialLilypond = string.Empty;
+
+        private int undoIndex = 0;
+
+        DPA_Musicsheets.Memento.Caretaker caretaker = new DPA_Musicsheets.Memento.Caretaker();
+
+        DPA_Musicsheets.Memento.Originator originator = new DPA_Musicsheets.Memento.Originator();
 
         // De OutputDevice is een midi device of het midikanaal van je PC.
         // Hierop gaan we audio streamen.
@@ -63,7 +70,7 @@ namespace DPA_Musicsheets
             _chainHandler.AddLastHandler(new InsertClefTrebleHandler());
             _chainHandler.AddLastHandler(new MissingBarlinesHandler());
             _chainHandler.AddLastHandler(new TempoHandler());
-
+            _chainHandler.AddLastHandler(new UndoHandler());
             //notenbalk.LoadFromXmlFile("Resources/example.xml");
         }
 
@@ -239,15 +246,30 @@ namespace DPA_Musicsheets
             }
         }
 
-        private void textBox_KeyDown(object sender, KeyEventArgs e)
+        private void previewKeydDown(object sender, KeyEventArgs e)
         {
             System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
             _keysDown.Add(key);
             if (_chainHandler.IncomingCommand(_keysDown, this))
-            {               
+            {
                 _keysDown.Clear();
-               // e.Handled = true;
+
             }
+            e.Handled = true;
+        }
+
+  
+
+        public void saveState()
+        {
+            originator.set(textBox.Text);
+            caretaker.addMemento(originator.saveToMemento());
+        }
+
+        public void loadState()
+        {
+           originator.restoreFromMemento(caretaker.getMemento(undoIndex));
+           textBox.Text = originator.getState();
         }
 
         private void textBox_KeyUp(object sender, KeyEventArgs e)
