@@ -12,5 +12,7 @@ namespace DPA_Musicsheets.Memento
 
         public void addMemento(MementoObject m) { savedStates.Add(m); }
         public MementoObject getMemento(int index) { return savedStates[index]; }
+
+        public void removeMemento(int index) { savedStates.RemoveAt(index); }
     }
 }

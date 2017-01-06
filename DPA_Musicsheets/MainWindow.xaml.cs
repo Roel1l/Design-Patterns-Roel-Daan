@@ -1,6 +1,5 @@
 ﻿using DPA_Musicsheets.MusicObjects;
 using Microsoft.Win32;
-using PSAMControlLibrary;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
@@ -32,6 +31,7 @@ namespace DPA_Musicsheets
         private MidiPlayer _player;
         public ObservableCollection<MidiTrack> MidiTracks { get; private set; }
         private List<System.Windows.Input.Key> _keysDown = new List<System.Windows.Input.Key>();
+        System.Windows.Input.Key prevKey = System.Windows.Input.Key.None;
         private ChainHandler _chainHandler = new ChainHandler();
 
         private DateTime _now;
@@ -39,8 +39,8 @@ namespace DPA_Musicsheets
         private bool _typed = false;
         private string initialLilypond = string.Empty;
 
-        private int undoIndex = 0;
-
+        private int undoIndex = -1;
+        public int caretIndex = 0;
         DPA_Musicsheets.Memento.Caretaker caretaker = new DPA_Musicsheets.Memento.Caretaker();
 
         DPA_Musicsheets.Memento.Originator originator = new DPA_Musicsheets.Memento.Originator();
@@ -164,7 +164,6 @@ namespace DPA_Musicsheets
                     IWrapper wrapper = new Wrapper();
                     wrapper.draw(scrollViewer, lyToObject.getTrackObject());
                 }));
-
             }
         }
 
@@ -248,28 +247,47 @@ namespace DPA_Musicsheets
 
         private void previewKeydDown(object sender, KeyEventArgs e)
         {
+            caretIndex = textBox.CaretIndex;
             System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
             _keysDown.Add(key);
             if (_chainHandler.IncomingCommand(_keysDown, this))
             {
                 _keysDown.Clear();
-
+                e.Handled = true;
             }
-            e.Handled = true;
+            if (_keysDown.Contains(System.Windows.Input.Key.Z) && prevKey == System.Windows.Input.Key.LeftCtrl)
+            {
+                textBox.Text = textBox.Text.Insert(caretIndex, "z");
+                caretIndex++;
+                e.Handled = true;
+            }
+            else if (_keysDown.Count > 0) prevKey = _keysDown[0];
+
+            saveState();
+
+            if (e.Handled) textBox.CaretIndex = caretIndex;
         }
 
   
-
         public void saveState()
         {
-            originator.set(textBox.Text);
-            caretaker.addMemento(originator.saveToMemento());
+            if (originator.getState() != textBox.Text){
+                undoIndex++;
+                originator.set(textBox.Text);
+                caretaker.addMemento(originator.saveToMemento());
+            }
         }
 
         public void loadState()
         {
-           originator.restoreFromMemento(caretaker.getMemento(undoIndex));
-           textBox.Text = originator.getState();
+            if (undoIndex > 0)
+            {
+                originator.restoreFromMemento(caretaker.getMemento(undoIndex - 1));
+                textBox.Text = originator.getState();
+                caretaker.removeMemento(undoIndex);
+                undoIndex--;
+                caretIndex--;
+            }
         }
 
         private void textBox_KeyUp(object sender, KeyEventArgs e)

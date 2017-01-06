@@ -19,7 +19,7 @@ namespace DPA_Musicsheets.CoR
         {
             if (keys.Contains(Key.LeftCtrl) && keys.Contains(Key.Z))
             {
-                window.textBox.Text = window.textBox.Text;
+                window.loadState();
                 return true;
             }
 
