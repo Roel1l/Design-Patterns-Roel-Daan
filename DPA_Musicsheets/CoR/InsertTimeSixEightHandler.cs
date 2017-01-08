@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DPA_Musicsheets.CoR.Command;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,13 @@ namespace DPA_Musicsheets.CoR
 {
     class InsertTimeSixEightHandler : ChainOfResponsability
     {
+        private InsertTimeSixEightCommand sixCommand = new InsertTimeSixEightCommand();
         protected override bool TryHandle(List<Key> keys, MainWindow window)
         {
             if (keys.Contains(Key.LeftAlt) && keys.Contains(Key.T) && keys.Contains(Key.D6))
             {
-                window.textBox.Text = window.textBox.Text.Insert(window.textBox.SelectionStart, @"\time 6/8");
+                sixCommand.setWindow(window);
+                sixCommand.execute();
                 return true;
             }
 

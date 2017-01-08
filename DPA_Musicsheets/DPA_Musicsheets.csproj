@@ -72,6 +72,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CoR\Command\BaseCommand.cs" />
+    <Compile Include="CoR\Command\InsertClefTrebleCommand.cs" />
+    <Compile Include="CoR\Command\InsertTimeFourFourCommand.cs" />
+    <Compile Include="CoR\Command\InsertTimeSixEightCommand.cs" />
+    <Compile Include="CoR\Command\InsertTimeThreeFourCommand.cs" />
+    <Compile Include="CoR\Command\OpenFileCommand.cs" />
+    <Compile Include="CoR\Command\SaveAsLyCommand.cs" />
+    <Compile Include="CoR\Command\SaveAsPDFCommand.cs" />
+    <Compile Include="CoR\Command\TempoCommand.cs" />
     <Compile Include="CoR\UndoHandler.cs" />
     <Compile Include="Memento\Caretaker.cs" />
     <Compile Include="CoR\ChainOfResponsability.cs" />
