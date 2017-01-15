@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DPA_Musicsheets.CoR.Command;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,13 @@ namespace DPA_Musicsheets.CoR
 {
     class InsertClefTrebleHandler : ChainOfResponsability
     {
+        private InsertClefTrebleCommand trebleCommand = new InsertClefTrebleCommand();
         protected override bool TryHandle(List<Key> keys, MainWindow window)
         {
             if (keys.Contains(Key.LeftAlt) && keys.Contains(Key.C))
             {
-                window.textBox.Text = window.textBox.Text.Insert(window.textBox.SelectionStart, @"\clef treble");
+                trebleCommand.setWindow(window);
+                trebleCommand.execute();
                 return true;
             }
 

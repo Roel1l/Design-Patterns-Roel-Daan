@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DPA_Musicsheets.CoR.Command;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,13 @@ namespace DPA_Musicsheets.CoR
 {
     class TempoHandler : ChainOfResponsability
     {
+        private TempoCommand tempoCommand = new TempoCommand();
         protected override bool TryHandle(List<Key> keys, MainWindow window)
         {
             if (keys.Contains(Key.LeftAlt) && keys.Contains(Key.S))
             {
-                window.textBox.Text = window.textBox.Text.Insert(window.textBox.SelectionStart, @"\tempo 4=120");
+                tempoCommand.setWindow(window);
+                tempoCommand.execute();
                 return true;
             }
 
