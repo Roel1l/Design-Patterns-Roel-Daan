@@ -265,7 +265,7 @@ namespace DPA_Musicsheets
 
             saveState();
 
-            if (e.Handled) textBox.CaretIndex = caretIndex;
+            if (e.Handled && caretIndex >= 0) textBox.CaretIndex = caretIndex;
         }
 
   
