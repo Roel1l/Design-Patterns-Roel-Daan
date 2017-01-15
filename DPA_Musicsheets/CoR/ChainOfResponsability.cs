@@ -1,30 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using DPA_Musicsheets.CoR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System;
+using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace DPA_Musicsheets
 {
-    class ChainOfResponsability
+    abstract class ChainOfResponsability : MainHandler
     {
-       
-        virtual public bool Handle(List<System.Windows.Input.Key> keys, MainWindow window) {
-            SaveHandler _saveHandler = new SaveHandler();
-            TextHandler _textHandler = new TextHandler();
+        public MainHandler Next
+        {
+            get;
+            set;
+        }
 
-            if (keys.Contains(System.Windows.Input.Key.LeftCtrl) && keys.Contains(System.Windows.Input.Key.LeftAlt)) {
-                // als zowel ctrl als alt zijn ingedrukt mag er niets gebeuren
+        virtual public bool Handle(List<System.Windows.Input.Key> keys, MainWindow window)
+        {
+            if (TryHandle(keys, window))
+            {
                 return true;
             }
-            else if (keys.Contains(System.Windows.Input.Key.LeftCtrl))
+            else
             {
-                return _saveHandler.Handle(keys, window);
-            }
-            else if (keys.Contains(System.Windows.Input.Key.LeftAlt)) {
-                return _textHandler.Handle(keys, window);
+                return Next != null ? Next.Handle(keys, window) : false;
             }
 
-            return true;
         }
+
+        protected abstract bool TryHandle(List<Key> keys, MainWindow window);
     }
 }

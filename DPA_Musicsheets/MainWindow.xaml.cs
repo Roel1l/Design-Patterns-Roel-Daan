@@ -1,6 +1,5 @@
 ﻿using DPA_Musicsheets.MusicObjects;
 using Microsoft.Win32;
-using PSAMControlLibrary;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
@@ -19,6 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DPA_Musicsheets.CoR;
+using DPA_Musicsheets.Memento;
 
 namespace DPA_Musicsheets
 {
@@ -30,12 +31,19 @@ namespace DPA_Musicsheets
         private MidiPlayer _player;
         public ObservableCollection<MidiTrack> MidiTracks { get; private set; }
         private List<System.Windows.Input.Key> _keysDown = new List<System.Windows.Input.Key>();
-        private ChainOfResponsability _actionChain = new ChainOfResponsability();
+        System.Windows.Input.Key prevKey = System.Windows.Input.Key.None;
+        private ChainHandler _chainHandler = new ChainHandler();
 
         private DateTime _now;
         private Timer _timer = new Timer();
         private bool _typed = false;
         private string initialLilypond = string.Empty;
+
+        private int undoIndex = -1;
+        public int caretIndex = 0;
+        DPA_Musicsheets.Memento.Caretaker caretaker = new DPA_Musicsheets.Memento.Caretaker();
+
+        DPA_Musicsheets.Memento.Originator originator = new DPA_Musicsheets.Memento.Originator();
 
         // De OutputDevice is een midi device of het midikanaal van je PC.
         // Hierop gaan we audio streamen.
@@ -50,6 +58,19 @@ namespace DPA_Musicsheets
             FillPSAMViewer();
             textBox.Visibility = Visibility.Hidden;
             timer();
+
+            // ChainOfResponsability Handlers
+            _chainHandler.AddLastHandler(new OpenFileHandler());
+            _chainHandler.AddLastHandler(new SaveAsLyHandler());
+            _chainHandler.AddLastHandler(new SaveAsPDFHandler());
+
+            _chainHandler.AddLastHandler(new InsertTimeFourFourHandler());
+            _chainHandler.AddLastHandler(new InsertTimeThreeFourHandler());
+            _chainHandler.AddLastHandler(new InsertTimeSixEightHandler());
+            _chainHandler.AddLastHandler(new InsertClefTrebleHandler());
+            _chainHandler.AddLastHandler(new MissingBarlinesHandler());
+            _chainHandler.AddLastHandler(new TempoHandler());
+            _chainHandler.AddLastHandler(new UndoHandler());
             //notenbalk.LoadFromXmlFile("Resources/example.xml");
         }
 
@@ -143,7 +164,6 @@ namespace DPA_Musicsheets
                     IWrapper wrapper = new Wrapper();
                     wrapper.draw(scrollViewer, lyToObject.getTrackObject());
                 }));
-
             }
         }
 
@@ -225,14 +245,48 @@ namespace DPA_Musicsheets
             }
         }
 
-        private void textBox_KeyDown(object sender, KeyEventArgs e)
+        private void previewKeydDown(object sender, KeyEventArgs e)
         {
+            caretIndex = textBox.CaretIndex;
             System.Windows.Input.Key key = (e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key);
             _keysDown.Add(key);
-            if (_actionChain.Handle(_keysDown, this))
-            {               
+            if (_chainHandler.IncomingCommand(_keysDown, this))
+            {
                 _keysDown.Clear();
-               // e.Handled = true;
+                e.Handled = true;
+            }
+            if (_keysDown.Contains(System.Windows.Input.Key.Z) && prevKey == System.Windows.Input.Key.LeftCtrl)
+            {
+                textBox.Text = textBox.Text.Insert(caretIndex, "z");
+                caretIndex++;
+                e.Handled = true;
+            }
+            else if (_keysDown.Count > 0) prevKey = _keysDown[0];
+
+            saveState();
+
+            if (e.Handled) textBox.CaretIndex = caretIndex;
+        }
+
+  
+        public void saveState()
+        {
+            if (originator.getState() != textBox.Text){
+                undoIndex++;
+                originator.set(textBox.Text);
+                caretaker.addMemento(originator.saveToMemento());
+            }
+        }
+
+        public void loadState()
+        {
+            if (undoIndex > 0)
+            {
+                originator.restoreFromMemento(caretaker.getMemento(undoIndex - 1));
+                textBox.Text = originator.getState();
+                caretaker.removeMemento(undoIndex);
+                undoIndex--;
+                caretIndex--;
             }
         }
 
